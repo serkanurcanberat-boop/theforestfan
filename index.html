@@ -3,148 +3,174 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Forest & SOTF Fan | Haber ve Rehber Merkezi</title>
+    <title>The Forest & SOTF Fan | Türkiye</title>
     <style>
-        /* GENEL TASARIM */
-        body {
-            background-color: #0f140f; /* Çok koyu orman yeşili */
-            color: #d1d1d1;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            line-height: 1.6;
+        /* TEMEL RENKLER VE AYARLAR */
+        :root {
+            --ana-renk: #4CAF50; /* Canlı Yeşil */
+            --koyu-yesil: #1b301b;
+            --arka-plan: #050705;
+            --kart-rengi: #121812;
+            --yazi-rengi: #e0e0e0;
         }
 
-        /* NAVBAR (MENÜ) */
+        body {
+            background-color: var(--arka-plan);
+            color: var(--yazi-rengi);
+            font-family: 'Segoe UI', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* ÜST MENÜ */
         nav {
-            background-color: #1a241a;
-            padding: 1rem;
+            background: rgba(0, 0, 0, 0.9);
+            padding: 15px 5%;
             display: flex;
-            justify-content: space-around;
-            border-bottom: 2px solid #2d5a27;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid var(--ana-renk);
             position: sticky;
             top: 0;
+            z-index: 1000;
         }
 
-        nav a {
-            color: #4CAF50;
+        .logo { font-size: 24px; font-weight: bold; color: var(--ana-renk); letter-spacing: 2px; }
+        
+        .nav-links a {
+            color: white;
             text-decoration: none;
-            font-weight: bold;
+            margin-left: 20px;
+            font-size: 14px;
             text-transform: uppercase;
+            transition: 0.3s;
         }
 
-        nav a:hover {
-            color: #fff;
-        }
+        .nav-links a:hover { color: var(--ana-renk); }
 
-        /* BAŞLIK ALANI */
-        header {
-            text-align: center;
-            padding: 50px 20px;
-            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://via.placeholder.com/1200x400?text=The+Forest+Background'); /* Buraya oyun resmi koyabilirsiniz */
-            background-size: cover;
-            border-bottom: 3px solid #2d5a27;
-        }
-
-        header h1 {
-            font-size: 3rem;
-            color: #4CAF50;
-            margin: 0;
-            text-shadow: 2px 2px 10px #000;
-        }
-
-        /* İÇERİK YAPISI */
-        .container {
-            max-width: 1000px;
-            margin: 20px auto;
-            display: grid;
-            grid-template-columns: 2fr 1fr; /* Sol geniş haber, sağ dar yan menü */
+        /* ANA İÇERİK */
+        .main-container {
+            max-width: 1200px;
+            margin: 40px auto;
+            display: flex;
+            flex-wrap: wrap;
             gap: 20px;
             padding: 0 20px;
         }
 
+        .content { flex: 3; min-width: 300px; }
+        .sidebar { flex: 1; min-width: 250px; }
+
         /* KART TASARIMI */
         .card {
-            background-color: #161d16;
-            border: 1px solid #2d442d;
-            padding: 20px;
-            margin-bottom: 20px;
+            background: var(--kart-rengi);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 30px;
+            border: 1px solid #222;
+        }
+
+        .card-image {
+            width: 100%;
+            height: 350px;
+            background: #222 url('https://via.placeholder.com/800x400?text=Oyun+Gorseli') center/cover;
+        }
+
+        .card-body { padding: 25px; }
+        .card-body h2 { color: var(--ana-renk); margin-top: 0; }
+        
+        /* BUTONLAR */
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background: var(--ana-renk);
+            color: black;
+            text-decoration: none;
+            font-weight: bold;
             border-radius: 5px;
+            margin-top: 15px;
         }
 
-        .card h2 {
-            color: #4CAF50;
-            margin-top: 0;
+        /* YORUM ALANI (DISQUS İÇİN) */
+        #disqus_thread {
+            background: var(--kart-rengi);
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
         }
 
-        .tag {
-            background-color: #2d5a27;
-            color: white;
-            padding: 3px 8px;
-            font-size: 12px;
-            border-radius: 3px;
-        }
-
-        /* MOBİL UYUMLULUK */
+        /* MOBİL AYAR */
         @media (max-width: 768px) {
-            .container {
-                grid-template-columns: 1fr;
-            }
+            .main-container { flex-direction: column; }
+            .card-image { height: 200px; }
         }
     </style>
 </head>
 <body>
 
     <nav>
-        <a href="#haberler">Haberler</a>
-        <a href="#rehberler">Rehberler</a>
-        <a href="#topluluk">Topluluk</a>
-        <a href="https://instagram.com/SAYFA_ADINIZ" target="_blank">Instagram</a>
+        <div class="logo">FOREST<span>TR</span></div>
+        <div class="nav-links">
+            <a href="#">Haberler</a>
+            <a href="#">Rehberler</a>
+            <a href="#">Topluluk</a>
+        </div>
     </nav>
 
-    <header>
-        <h1>THE FOREST TR</h1>
-        <p>Sons of the Forest Haber ve Rehber Kaynağı</p>
-    </header>
-
-    <div class="container">
+    <div class="main-container">
         
-        <main>
-            <section id="haberler">
-                <div class="card">
-                    <span class="tag">HABER</span>
-                    <h2>Sons of the Forest v1.0 Yayınlandı!</h2>
-                    <p>Büyük bekleyiş sona erdi. Yeni hikaye detayları, yeni mutant türleri ve gelişmiş üretim seçenekleri artık oyunda. İşte tüm detaylar...</p>
-                    <a href="#" style="color: #81c784;">Devamını oku...</a>
+        <div class="content">
+            <article class="card">
+                <div class="card-image"></div>
+                <div class="card-body">
+                    <h2>Sons of the Forest Hayatta Kalma Rehberi</h2>
+                    <p>Adada ilk gününüzde ne yapmalısınız? Hangi eşyaları öncelikli toplamalısınız? İşte profesyonel oyunculardan tavsiyeler...</p>
+                    <a href="#" class="btn">Devamını Oku</a>
                 </div>
-            </section>
+            </article>
 
-            <section id="rehberler">
-                <div class="card">
-                    <span class="tag">REHBER</span>
-                    <h2>Modern Balta (Modern Axe) Nerede Bulunur?</h2>
-                    <p>Oyunun başlarında alabileceğiniz en güçlü silahlardan biri olan Modern Balta'nın mağara konumu ve koordinatları...</p>
-                    <a href="#" style="color: #81c784;">Rehbere git...</a>
-                </div>
-            </section>
-        </main>
+            <div id="disqus_thread"></div>
+            <script>
+                /**
+                * YORUMLARI AKTİF ETMEK İÇİN:
+                * 1. disqus.com'a git ve kayıt ol.
+                * 2. "Get Started" diyerek siteni ekle.
+                * 3. Sana verilen kısa ismi (shortname) aşağıdaki yere yaz.
+                */
+                var disqus_config = function () {
+                    this.page.url = window.location.href;  
+                    this.page.identifier = 'anasayfa'; 
+                };
+                (function() { 
+                    var d = document, s = d.createElement('script');
+                    s.src = 'https://SİTE-KISA-ISMI.disqus.com/embed.js'; // BURAYI DEĞİŞTİR
+                    s.setAttribute('data-timestamp', +new Date());
+                    (d.head || d.body).appendChild(s);
+                })();
+            </script>
+        </div>
 
-        <aside>
-            <div class="card" id="topluluk">
-                <h3>Topluluğumuza Katıl</h3>
-                <p>Arkadaş bulmak ve hayatta kalmak için Discord sunucumuza gel!</p>
-                <a href="#" style="display: block; background: #5865F2; color: white; text-align: center; padding: 10px; text-decoration: none; border-radius: 5px;">Discord'a Katıl</a>
+        <div class="sidebar">
+            <div class="card" style="padding: 20px;">
+                <h3 style="color: var(--ana-renk);">Takip Et</h3>
+                <p>Instagram: @yakinda</p>
+                <p>Discord: <a href="#" style="color: #5865F2;">Sunucuya Katıl</a></p>
             </div>
-
-            <div class="card">
-                <h3>Instagram</h3>
-                <p>@sayfa_adiniz takip etmeyi unutmayın!</p>
+            
+            <div class="card" style="padding: 20px;">
+                <h3 style="color: var(--ana-renk);">Popüler Rehberler</h3>
+                <ul style="padding-left: 15px;">
+                    <li><a href="#" style="color: white;">Kürek Nerede?</a></li>
+                    <li><a href="#" style="color: white;">Katana Konumu</a></li>
+                    <li><a href="#" style="color: white;">En İyi Üs Yerleri</a></li>
+                </ul>
             </div>
-        </aside>
+        </div>
 
     </div>
 
-    <footer style="text-align: center; padding: 20px; font-size: 14px; opacity: 0.6;">
-        &copy; 2026 The Forest & SOTF Fan Sayfası. Tüm hakları saklıdır.
+    <footer style="text-align: center; padding: 40px; opacity: 0.4;">
+        &copy; 2026 Forest & SOTF TR Fan Project
     </footer>
 
 </body>
