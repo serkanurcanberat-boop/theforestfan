@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Forest & SOTF Fan | Haber ve Rehber Merkezi</title>
+    <style>
+        /* GENEL TASARIM */
+        body {
+            background-color: #0f140f; /* Çok koyu orman yeşili */
+            color: #d1d1d1;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            line-height: 1.6;
+        }
+
+        /* NAVBAR (MENÜ) */
+        nav {
+            background-color: #1a241a;
+            padding: 1rem;
+            display: flex;
+            justify-content: space-around;
+            border-bottom: 2px solid #2d5a27;
+            position: sticky;
+            top: 0;
+        }
+
+        nav a {
+            color: #4CAF50;
+            text-decoration: none;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        nav a:hover {
+            color: #fff;
+        }
+
+        /* BAŞLIK ALANI */
+        header {
+            text-align: center;
+            padding: 50px 20px;
+            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://via.placeholder.com/1200x400?text=The+Forest+Background'); /* Buraya oyun resmi koyabilirsiniz */
+            background-size: cover;
+            border-bottom: 3px solid #2d5a27;
+        }
+
+        header h1 {
+            font-size: 3rem;
+            color: #4CAF50;
+            margin: 0;
+            text-shadow: 2px 2px 10px #000;
+        }
+
+        /* İÇERİK YAPISI */
+        .container {
+            max-width: 1000px;
+            margin: 20px auto;
+            display: grid;
+            grid-template-columns: 2fr 1fr; /* Sol geniş haber, sağ dar yan menü */
+            gap: 20px;
+            padding: 0 20px;
+        }
+
+        /* KART TASARIMI */
+        .card {
+            background-color: #161d16;
+            border: 1px solid #2d442d;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+
+        .card h2 {
+            color: #4CAF50;
+            margin-top: 0;
+        }
+
+        .tag {
+            background-color: #2d5a27;
+            color: white;
+            padding: 3px 8px;
+            font-size: 12px;
+            border-radius: 3px;
+        }
+
+        /* MOBİL UYUMLULUK */
+        @media (max-width: 768px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <a href="#haberler">Haberler</a>
+        <a href="#rehberler">Rehberler</a>
+        <a href="#topluluk">Topluluk</a>
+        <a href="https://instagram.com/SAYFA_ADINIZ" target="_blank">Instagram</a>
+    </nav>
+
+    <header>
+        <h1>THE FOREST TR</h1>
+        <p>Sons of the Forest Haber ve Rehber Kaynağı</p>
+    </header>
+
+    <div class="container">
+        
+        <main>
+            <section id="haberler">
+                <div class="card">
+                    <span class="tag">HABER</span>
+                    <h2>Sons of the Forest v1.0 Yayınlandı!</h2>
+                    <p>Büyük bekleyiş sona erdi. Yeni hikaye detayları, yeni mutant türleri ve gelişmiş üretim seçenekleri artık oyunda. İşte tüm detaylar...</p>
+                    <a href="#" style="color: #81c784;">Devamını oku...</a>
+                </div>
+            </section>
+
+            <section id="rehberler">
+                <div class="card">
+                    <span class="tag">REHBER</span>
+                    <h2>Modern Balta (Modern Axe) Nerede Bulunur?</h2>
+                    <p>Oyunun başlarında alabileceğiniz en güçlü silahlardan biri olan Modern Balta'nın mağara konumu ve koordinatları...</p>
+                    <a href="#" style="color: #81c784;">Rehbere git...</a>
+                </div>
+            </section>
+        </main>
+
+        <aside>
+            <div class="card" id="topluluk">
+                <h3>Topluluğumuza Katıl</h3>
+                <p>Arkadaş bulmak ve hayatta kalmak için Discord sunucumuza gel!</p>
+                <a href="#" style="display: block; background: #5865F2; color: white; text-align: center; padding: 10px; text-decoration: none; border-radius: 5px;">Discord'a Katıl</a>
+            </div>
+
+            <div class="card">
+                <h3>Instagram</h3>
+                <p>@sayfa_adiniz takip etmeyi unutmayın!</p>
+            </div>
+        </aside>
+
+    </div>
+
+    <footer style="text-align: center; padding: 20px; font-size: 14px; opacity: 0.6;">
+        &copy; 2026 The Forest & SOTF Fan Sayfası. Tüm hakları saklıdır.
+    </footer>
+
+</body>
+</html>
