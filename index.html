@@ -3,155 +3,197 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>THE FOREST & SOTF TR | Ultra Fan Hub</title>
+    <title>THE FOREST & SOTF | Pro Hub</title>
     <style>
-        /* --- TASARIM AYARLARI --- */
         :root {
-            --ana-renk: #4CAF50;
-            --koyu-yesil: #1b301b;
-            --arka-plan: #050705;
-            --kart-rengi: rgba(20, 26, 20, 0.8);
-            --yazi: #e0e0e0;
+            --neon-green: #4eff4e;
+            --dark-forest: #0a0f0a;
+            --glass: rgba(255, 255, 255, 0.03);
+            --border: rgba(78, 255, 78, 0.2);
         }
 
         body {
-            background: var(--arka-plan);
-            color: var(--yazi);
-            font-family: 'Segoe UI', sans-serif;
+            background-color: var(--dark-forest);
+            color: #e0e0e0;
+            font-family: 'Segoe UI', system-ui, sans-serif;
             margin: 0;
-            /* Arka plan resmi */
-            background-image: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.8)), url('https://images.alphacoders.com/130/1301384.jpeg');
-            background-size: cover;
-            background-attachment: fixed;
+            overflow-x: hidden;
+            background-image: radial-gradient(circle at 50% -20%, #1a2e1a, #0a0f0a);
         }
 
         /* NAVBAR */
         nav {
-            background: rgba(0,0,0,0.9);
-            padding: 15px 5%;
+            padding: 20px 5%;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 2px solid var(--ana-renk);
+            background: rgba(0,0,0,0.8);
+            backdrop-filter: blur(15px);
+            border-bottom: 1px solid var(--border);
             position: sticky;
             top: 0;
             z-index: 1000;
         }
 
-        .logo { font-size: 24px; font-weight: bold; color: var(--ana-renk); text-transform: uppercase; }
+        .logo { font-size: 26px; font-weight: 800; color: var(--neon-green); letter-spacing: 2px; }
+        .logo span { color: #fff; }
 
-        /* KONTEYNER */
+        /* CONTAINER */
         .container {
             max-width: 1200px;
-            margin: 30px auto;
+            margin: 40px auto;
             display: grid;
             grid-template-columns: 2.5fr 1fr;
-            gap: 20px;
+            gap: 30px;
             padding: 0 20px;
         }
 
-        /* KARTLAR */
+        /* LÜKS KARTLAR */
         .card {
-            background: var(--kart-rengi);
-            border-radius: 12px;
-            padding: 25px;
-            margin-bottom: 20px;
-            border: 1px solid rgba(255,255,255,0.05);
+            background: var(--glass);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            transition: 0.4s;
             backdrop-filter: blur(10px);
         }
 
-        .card h2 { color: var(--ana-renk); margin-top: 0; }
+        .card:hover { border-color: var(--neon-green); box-shadow: 0 0 30px rgba(78, 255, 78, 0.1); }
 
-        /* BUTONLAR */
-        .btn {
-            display: inline-block;
-            padding: 10px 20px;
-            background: var(--ana-renk);
-            color: black;
+        .card h2 { color: #fff; margin-top: 0; font-size: 28px; }
+
+        /* HABER OKUMA SİSTEMİ */
+        .full-content { display: none; margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--border); }
+        
+        .read-more-btn {
+            background: none;
+            border: 2px solid var(--neon-green);
+            color: var(--neon-green);
+            padding: 10px 25px;
+            border-radius: 50px;
+            cursor: pointer;
             font-weight: bold;
-            text-decoration: none;
-            border-radius: 5px;
-            margin-top: 10px;
+            transition: 0.3s;
         }
 
-        /* YAN MENÜ */
-        .sidebar-item { margin-bottom: 20px; }
-        .social-btn {
+        .read-more-btn:hover { background: var(--neon-green); color: #000; }
+
+        /* SIDEBAR SİGİLLERİ */
+        .sidebar-box {
+            background: rgba(255,255,255,0.02);
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .social-link {
             display: block;
-            padding: 12px;
             text-align: center;
-            border-radius: 5px;
+            padding: 15px;
             margin-top: 10px;
-            font-weight: bold;
+            border-radius: 12px;
             text-decoration: none;
+            font-weight: bold;
             color: white;
+            transition: 0.3s;
         }
-        .discord { background: #5865F2; }
-        .insta { background: #E1306C; }
 
-        /* MOBİL UYUMLULUK */
-        @media (max-width: 800px) {
-            .container { grid-template-columns: 1fr; }
-        }
+        .ds-btn { background: #5865F2; }
+        .ig-btn { background: linear-gradient(45deg, #f09433, #dc2743, #bc1888); }
+
+        /* FOOTER */
+        footer { text-align: center; padding: 60px; opacity: 0.4; font-size: 13px; }
+
+        @media (max-width: 900px) { .container { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
 
     <nav>
-        <div class="logo">FOREST TR</div>
-        <div class="nav-links">
-            <a href="#yorumlar" style="color: white; text-decoration: none;">Yorumlar</a>
-        </div>
+        <div class="logo">FOREST<span>TR</span></div>
+        <div class="status" style="font-size: 12px; color: var(--neon-green);">● SUNUCU KAPALI</div>
     </nav>
 
     <div class="container">
+        
         <main>
-            <div class="card">
-                <h2>The Forest v1.0 Güncellemesi</h2>
-                <p>Oyunun son versiyonuyla gelen tüm yenilikleri burada bulabilirsiniz. Yeni mutantlar, hikayenin sonu ve çok daha fazlası!</p>
-                <a href="#" class="btn">Devamını Oku</a>
+            <div class="card" id="haber-1">
+                <span style="color: var(--neon-green); font-size: 12px; font-weight: bold;">GÜNCEL HABER</span>
+                <h2>BERAT TARAFINDAN BİLGİ EKLENECEK!</h2>
+                <p>...
+                    .</p>
+                
+                <div id="full-1" class="full-content">
+                    <p>Tam sürümle birlikte oyuna eklenen en büyük özellik "Kurgulanmış Son" oldu. Artık adadan kaçışınız çok daha epik bir sinematik ile bitiyor. Ayrıca yeni "Solafite" cevheri ile silahlarınızı güçlendirebilirsiniz. Yapay zeka Kelvin artık daha akıllı ve savunma hatlarını daha hızlı kuruyor.</p>
+                    <img src="https://via.placeholder.com/800x400?text=SOTF+Sahneleri" style="width: 100%; border-radius: 15px; margin: 15px 0;">
+                </div>
+                
+                <button class="read-more-btn" onclick="toggleRead('full-1', this)">Devamını Oku</button>
+            </div>
+
+            <div class="card" id="rehber-1">
+                <span style="color: var(--neon-green); font-size: 12px; font-weight: bold;">STRATEJİ REHBERİ</span>
+                <h2>Modern Balta En Hızlı Nasıl Alınır?</h2>
+                <p>Oyunun başında savunmasız kalmamak için en iyi silah olan Modern Balta'yı 5 dakikada alın.</p>
+                
+                <div id="full-2" class="full-content">
+                    <p>Köyün yakınındaki mağaradan aşağı indiğinizde karşınıza çıkan ilk büyük odada sağ tarafa yönelin. Asılı duran cesetlerin olduğu bölgenin hemen arkasındaki kutuların üzerinde baltayı bulacaksınız. Unutmayın, yanınızda mutlaka birkaç el feneri pili bulundurun!</p>
+                </div>
+                
+                <button class="read-more-btn" onclick="toggleRead('full-2', this)">Rehberi Aç</button>
             </div>
 
             <div class="card">
-                <h2>Hızlı Rehberler</h2>
-                <p>Kürek nerede? Modern balta nasıl alınır? Yeni başlayanlar için rehberlerimiz hazır.</p>
-                <a href="#" class="btn">Rehberlere Git</a>
-            </div>
-
-            <div class="card" id="yorumlar">
-                <h2>Topluluk Tartışması</h2>
-                <p>Yorumlarınızı aşağıya bırakabilirsiniz.</p>
+                <h2>Topluluk Yorumları</h2>
+                <p style="font-size: 14px; color: #888;">Yorum yapmak için GitHub hesabınızla giriş yapmanız yeterlidir.</p>
                 
                 <script src="https://utteranc.es/client.js"
-                        repo="serkanurcanberat*boop/theforestfan"
+                        repo="serkanurcanberat-boop/theforestfan"
                         issue-term="pathname"
                         theme="github-dark"
                         crossorigin="anonymous"
                         async>
                 </script>
-                </div>
+            </div>
         </main>
 
         <aside>
-            <div class="card">
-                <h3>Bize Katıl</h3>
-                <a href="BURAYA_DISCORD_LINKI" class="social-btn discord">Discord Sunucusu</a>
-                <a href="BURAYA_INSTA_LINKI" class="social-btn insta">Instagram Sayfası</a>
+            <div class="sidebar-box">
+                <h3 style="margin-top:0">Bağlantılar</h3>
+                <a href="#" class="social-link ds-btn">Discord'a Katıl</a>
+                <a href="#" class="social-link ig-btn">Instagram'da Takip Et</a>
             </div>
 
-            <div class="card">
-                <h3>Popüler Sayfalar</h3>
-                <ul style="list-style: none; padding: 0;">
-                    <li><a href="#" style="color: var(--ana-renk);"># Modern Balta</a></li>
-                    <li><a href="#" style="color: var(--ana-renk);"># Katana Konumu</a></li>
-                </ul>
+            <div class="sidebar-box">
+                <h3 style="margin-top:0">İstatistikler</h3>
+                <div style="font-size: 14px; color: #888;">
+                    <p>Toplam Rehber: 12</p>
+                    <p>Güncel Sürüm: v1.0</p>
+                    <p>Aktif Oyuncu: +500</p>
+                </div>
             </div>
         </aside>
+
     </div>
 
-    <footer style="text-align: center; padding: 20px; opacity: 0.5;">
-        &copy; 2026 The Forest & SOTF TR Project
+    <footer>
+        <p>&copy; 2026 ENDNIGHT FAN - Tüm hakları saklıdır.</p>
     </footer>
+
+    <script>
+        function toggleRead(id, btn) {
+            var content = document.getElementById(id);
+            if (content.style.display === "block") {
+                content.style.display = "none";
+                btn.innerHTML = "Devamını Oku";
+            } else {
+                content.style.display = "block";
+                btn.innerHTML = "Kapat";
+            }
+        }
+    </script>
 
 </body>
 </html>
