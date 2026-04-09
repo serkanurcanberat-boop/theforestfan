@@ -5,362 +5,256 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>THE FOREST TR | Premium Hub</title>
     <style>
-        /* --- 1. CORE DEĞİŞKENLER & RESET --- */
+        /* --- CORE DEĞİŞKENLER & RESET --- */
         :root {
             --clr-bg: #030504;
-            --clr-surface: rgba(12, 18, 14, 0.6);
-            --clr-surface-hover: rgba(18, 28, 20, 0.8);
-            --clr-primary: #5cb85c;
+            --clr-surface: rgba(12, 18, 14, 0.7);
+            --clr-primary: #4eff4e;
             --clr-text: #e2e8f0;
-            --clr-text-muted: #94a3b8;
-            --clr-border: rgba(92, 184, 92, 0.15);
-            --transition-smooth: 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            --clr-border: rgba(78, 255, 78, 0.2);
+            --transition: 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            font-family: 'Segoe UI', system-ui, sans-serif;
             background-color: var(--clr-bg);
             color: var(--clr-text);
             line-height: 1.7;
             overflow-x: hidden;
             background-image: 
-                radial-gradient(circle at top right, rgba(20, 40, 20, 0.4) 0%, transparent 40%),
-                radial-gradient(circle at bottom left, rgba(10, 20, 10, 0.8) 0%, transparent 50%),
+                linear-gradient(to bottom, rgba(3, 5, 4, 0.8), rgba(3, 5, 4, 0.95)),
                 url('https://images.alphacoders.com/130/1301384.jpeg');
             background-size: cover;
             background-attachment: fixed;
-            background-position: center;
         }
 
-        /* --- 2. ÖZEL SCROLLBAR --- */
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: var(--clr-bg); }
-        ::-webkit-scrollbar-thumb { background: rgba(92, 184, 92, 0.3); border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: var(--clr-primary); }
-
-        /* --- 3. PREMIUM NAVBAR --- */
+        /* --- NAVBAR & GİRİŞ BUTONU --- */
         .navbar {
-            position: fixed;
-            top: 0; width: 100%; z-index: 9999;
-            background: rgba(3, 5, 4, 0.85);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
+            position: fixed; top: 0; width: 100%; z-index: 1000;
+            background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(20px);
             border-bottom: 1px solid var(--clr-border);
-            padding: 1rem 5%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            transition: var(--transition-smooth);
+            padding: 15px 5%; display: flex; justify-content: space-between; align-items: center;
         }
 
-        .navbar.scrolled { padding: 0.8rem 5%; background: rgba(3, 5, 4, 0.95); }
+        .brand { font-size: 1.8rem; font-weight: 900; color: #fff; text-transform: uppercase; letter-spacing: 1px; }
+        .brand span { color: var(--clr-primary); text-shadow: 0 0 15px var(--clr-primary); }
 
-        .brand {
-            font-size: 1.5rem;
-            font-weight: 900;
-            letter-spacing: -0.5px;
-            color: #fff;
-            text-transform: uppercase;
-        }
-        .brand span { color: var(--clr-primary); }
-
-        /* --- 4. ANA DÜZEN (CSS GRID) --- */
-        .layout-grid {
-            max-width: 1400px;
-            margin: 120px auto 40px;
-            padding: 0 2rem;
-            display: grid;
-            grid-template-columns: 1fr 350px;
-            gap: 2.5rem;
-        }
-
-        /* --- 5. LÜKS KART TASARIMI --- */
-        .glass-card {
-            background: var(--clr-surface);
-            border: 1px solid var(--clr-border);
-            border-radius: 16px;
-            padding: 2.5rem;
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            transition: var(--transition-smooth);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .glass-card::before {
-            content: "";
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.03), transparent);
-            transform: translateX(-100%);
-            transition: 0.6s ease;
-        }
-
-        .glass-card:hover::before { transform: translateX(100%); }
-        .glass-card:hover { border-color: rgba(92, 184, 92, 0.4); background: var(--clr-surface-hover); }
-
-        .tag {
-            display: inline-block;
-            padding: 0.25rem 0.75rem;
-            background: rgba(92, 184, 92, 0.1);
-            color: var(--clr-primary);
-            font-size: 0.75rem;
-            font-weight: 700;
-            letter-spacing: 1px;
-            border-radius: 100vw;
-            text-transform: uppercase;
-            margin-bottom: 1rem;
-            border: 1px solid rgba(92, 184, 92, 0.2);
-        }
-
-        .article-title {
-            font-size: 2rem;
-            font-weight: 800;
-            line-height: 1.2;
-            margin-bottom: 1rem;
-            color: #fff;
-        }
-
-        .article-excerpt { color: var(--clr-text-muted); font-size: 1.05rem; }
-
-        /* --- 6. PRO SEVİYE HABER AÇILMA ANİMASYONU (GRID-ROWS) --- */
-        .expandable-wrapper {
-            display: grid;
-            grid-template-rows: 0fr;
-            transition: grid-template-rows 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-            margin-top: 1.5rem;
-        }
-
-        .expandable-wrapper.is-open { grid-template-rows: 1fr; }
-        
-        .expandable-inner { overflow: hidden; }
-
-        .article-full-content {
-            padding-top: 2rem;
-            margin-top: 2rem;
-            border-top: 1px solid var(--clr-border);
-            color: #cbd5e1;
-        }
-
-        .article-full-content img {
-            width: 100%;
-            border-radius: 12px;
-            margin: 1.5rem 0;
-            border: 1px solid var(--clr-border);
-        }
-
-        /* --- 7. MODERN BUTONLAR --- */
-        .btn-premium {
-            background: transparent;
+        .btn-login {
+            background: rgba(78, 255, 78, 0.1);
             color: var(--clr-primary);
             border: 1px solid var(--clr-primary);
-            padding: 0.75rem 2rem;
-            font-size: 0.875rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: var(--transition-smooth);
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            margin-top: 1.5rem;
+            padding: 8px 25px; border-radius: 8px;
+            font-weight: 800; cursor: pointer; letter-spacing: 1px;
+            transition: var(--transition);
         }
 
-        .btn-premium:hover {
-            background: var(--clr-primary);
-            color: var(--clr-bg);
-            box-shadow: 0 0 20px rgba(92, 184, 92, 0.3);
-        }
+        .btn-login:hover { background: var(--clr-primary); color: #000; box-shadow: 0 0 20px rgba(78, 255, 78, 0.4); }
 
-        /* --- 8. YAN MENÜ (SIDEBAR) --- */
-        .sidebar { display: flex; flex-direction: column; gap: 2rem; position: sticky; top: 120px; }
-
-        .widget-title {
-            font-size: 1rem;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            color: #fff;
-            margin-bottom: 1.5rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .widget-title::before {
-            content: ""; display: block; width: 8px; height: 8px;
-            background: var(--clr-primary); border-radius: 50%;
-        }
-
-        .social-link {
+        /* --- GİRİŞ / KAYIT MODALI (AÇILIR PENCERE) --- */
+        .auth-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.8); backdrop-filter: blur(8px);
             display: flex; justify-content: center; align-items: center;
-            padding: 1rem; border-radius: 8px; font-weight: 700;
-            text-decoration: none; color: #fff; margin-bottom: 1rem;
-            transition: transform 0.3s ease, filter 0.3s ease;
+            z-index: 9999; opacity: 0; pointer-events: none;
+            transition: var(--transition);
         }
 
-        .social-link:hover { transform: translateY(-3px); filter: brightness(1.2); }
-        .bg-discord { background: #5865F2; }
-        .bg-instagram { background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); }
+        .auth-overlay.active { opacity: 1; pointer-events: auto; }
 
-        /* --- 9. SCROLL ANİMASYONLARI (REVEAL) --- */
-        .reveal { opacity: 0; transform: translateY(30px); transition: 0.8s all cubic-bezier(0.16, 1, 0.3, 1); }
-        .reveal.active { opacity: 1; transform: translateY(0); }
-
-        /* MOBİL DÜZEN */
-        @media (max-width: 1024px) {
-            .layout-grid { grid-template-columns: 1fr; padding: 0 1.5rem; }
-            .sidebar { position: static; }
+        .auth-modal {
+            background: rgba(15, 20, 15, 0.95);
+            border: 1px solid var(--clr-border);
+            border-radius: 20px; width: 400px; max-width: 90%;
+            padding: 40px; transform: translateY(50px);
+            transition: var(--transition);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.8);
+            position: relative;
         }
+
+        .auth-overlay.active .auth-modal { transform: translateY(0); }
+
+        .close-btn {
+            position: absolute; top: 15px; right: 20px;
+            font-size: 24px; color: #888; cursor: pointer; transition: 0.3s;
+        }
+        .close-btn:hover { color: var(--clr-primary); }
+
+        /* Sekmeler */
+        .auth-tabs { display: flex; margin-bottom: 30px; border-bottom: 2px solid rgba(255,255,255,0.1); }
+        .auth-tab {
+            flex: 1; text-align: center; padding: 10px; cursor: pointer;
+            font-weight: bold; color: #888; transition: 0.3s;
+        }
+        .auth-tab.active { color: var(--clr-primary); border-bottom: 2px solid var(--clr-primary); margin-bottom: -2px; }
+
+        /* Form Elemanları */
+        .auth-form { display: none; }
+        .auth-form.active { display: block; animation: fadeIn 0.4s ease forwards; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateX(-10px); } to { opacity: 1; transform: translateX(0); } }
+
+        .input-group { margin-bottom: 20px; }
+        .input-group label { display: block; font-size: 12px; color: #aaa; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 1px; }
+        .input-group input {
+            width: 100%; padding: 12px; background: rgba(0,0,0,0.5);
+            border: 1px solid rgba(255,255,255,0.1); border-radius: 8px;
+            color: #fff; font-size: 16px; transition: 0.3s;
+        }
+        .input-group input:focus { outline: none; border-color: var(--clr-primary); box-shadow: 0 0 10px rgba(78,255,78,0.2); }
+
+        .btn-submit {
+            width: 100%; padding: 15px; background: var(--clr-primary);
+            color: #000; border: none; border-radius: 8px;
+            font-weight: 900; font-size: 16px; cursor: pointer; transition: 0.3s; margin-top: 10px;
+        }
+        .btn-submit:hover { box-shadow: 0 0 20px rgba(78,255,78,0.4); transform: translateY(-2px); }
+
+        /* Sosyal Girişler */
+        .social-login { margin-top: 25px; text-align: center; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px; }
+        .social-btn {
+            display: block; width: 100%; padding: 12px; margin-bottom: 10px;
+            border-radius: 8px; border: none; font-weight: bold; color: #fff; cursor: pointer; transition: 0.3s;
+        }
+        .btn-google { background: #db4437; }
+        .btn-discord { background: #5865F2; }
+        .social-btn:hover { filter: brightness(1.2); }
+
+        /* --- ANA DÜZEN --- */
+        .layout { max-width: 1300px; margin: 120px auto; padding: 0 20px; display: grid; grid-template-columns: 2fr 1fr; gap: 30px; }
+
+        .glass-card { background: var(--clr-surface); border: 1px solid var(--clr-border); border-radius: 20px; padding: 40px; backdrop-filter: blur(15px); margin-bottom: 30px; }
+        .glass-card h2 { font-size: 28px; color: #fff; margin-bottom: 15px; }
+        
+        .article-content { max-height: 0; overflow: hidden; transition: max-height 0.5s ease-out; }
+        .article-content.open { max-height: 1000px; margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--clr-border); }
+
+        .btn-read { background: transparent; color: var(--clr-primary); border: 1px solid var(--clr-primary); padding: 10px 20px; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 20px; transition: 0.3s; }
+        .btn-read:hover { background: var(--clr-primary); color: #000; }
+
+        @media (max-width: 900px) { .layout { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
 
-    <nav class="navbar" id="navbar">
+    <nav class="navbar">
         <div class="brand">FOREST<span>TR</span></div>
-        <div style="font-size: 0.75rem; letter-spacing: 2px; color: var(--clr-text-muted); text-transform: uppercase;">
-            Hayatta Kalma Merkezi
-        </div>
+        <button class="btn-login" onclick="openAuth()">GİRİŞ YAP</button>
     </nav>
 
-    <div class="layout-grid">
-        
-        <main style="display: flex; flex-direction: column; gap: 2.5rem;">
+    <div class="auth-overlay" id="authOverlay">
+        <div class="auth-modal">
+            <span class="close-btn" onclick="closeAuth()">&times;</span>
             
-            <article class="glass-card reveal">
-                <span class="tag">Resmi Güncelleme</span>
-                <h2 class="article-title">Sons of the Forest v1.0 Tam Sürüm Yayınlandı</h2>
-                <p class="article-excerpt">Yıllar süren erken erişim sürecinin ardından Endnight Games son sözü söyledi. Hikaye finali, yeni mağara sistemleri ve geliştirilmiş yapay zeka devrede.</p>
-                
-                <div class="expandable-wrapper" id="content-1">
-                    <div class="expandable-inner">
-                        <div class="article-full-content">
-                            <p>Oyunun mimarisi tamamen baştan elden geçirildi. Artık yapay zeka takım arkadaşlarınız (Kelvin ve Virginia) savaş durumlarında çok daha rasyonel kararlar alabiliyor. Haritanın daha önce kapalı olan kuzeydoğu bölgesindeki devasa sığınak açıldı.</p>
-                            <img src="https://images.alphacoders.com/130/1301384.jpeg" alt="Oyun İçi Görüntü">
-                            <p><strong>Yama Notları Özet:</strong> Yeni 3 mutant türü, araç dinamiklerinde iyileştirme ve "Radyoaktif" statü efekti eklendi. Geliştirici ekip, mod desteği için altyapının sağlandığını doğruladı.</p>
-                        </div>
-                    </div>
-                </div>
-
-                <button class="btn-premium toggle-btn" onclick="toggleArticle('content-1', this)">
-                    Haberi Genişlet
-                </button>
-            </article>
-
-            <article class="glass-card reveal">
-                <span class="tag">Taktik Rehber</span>
-                <h2 class="article-title">Modern Balta İçin Hızlı Koşu (Speedrun) Rotası</h2>
-                <p class="article-excerpt">Oyunun ilk 10 dakikasında savunmasız kalmamak için en güçlü yakın dövüş silahını en az riskle alma rehberi.</p>
-                
-                <div class="expandable-wrapper" id="content-2">
-                    <div class="expandable-inner">
-                        <div class="article-full-content">
-                            <p>Helikopterin düştüğü noktadan bağımsız olarak, pusulanızı kullanarak merkezi gölün güneybatısındaki kampa ilerleyin. GPS cihazınızdaki "Mor" ünlem işaretlerinden batıda olanı mağaranın girişidir.</p>
-                            <p>İçeri girerken yanınızda sadece çakmak olması yeterli. İlk ip inişinden sonra düşmanlarla karşılaşmadan sol duvardan sürünerek ilerlerseniz, baltanın bulunduğu çadıra direkt ulaşabilirsiniz.</p>
-                        </div>
-                    </div>
-                </div>
-
-                <button class="btn-premium toggle-btn" onclick="toggleArticle('content-2', this)">
-                    Rehberi İncele
-                </button>
-            </article>
-
-            <article class="glass-card reveal" style="margin-top: 2rem;">
-                <h2 class="article-title" style="font-size: 1.5rem;">Saha Raporları (Yorumlar)</h2>
-                <p style="color: var(--clr-text-muted); font-size: 0.9rem; margin-bottom: 2rem;">Deneyimlerinizi, üs koordinatlarınızı veya sorularınızı paylaşın.</p>
-                
-                <div id="cusdis_thread"
-                  data-host="https://cusdis.com"
-                  data-app-id="69e2629b-8980-4966-96a2-63467664d55b"
-                  data-page-id="insanazor_main"
-                  data-page-url="https://serkanurcanberat-boop.github.io/theforestfan/"
-                  data-page-title="Forest TR">
-                </div>
-                <script async defer src="https://cusdis.com/js/cusdis.es.js"></script>
-            </article>
-
-        </main>
-
-        <aside class="sidebar">
-            <div class="glass-card reveal" style="padding: 2rem;">
-                <h3 class="widget-title">İletişim Ağları</h3>
-                <a href="#" class="social-link bg-discord">Discord Ağına Bağlan</a>
-                <a href="#" class="social-link bg-instagram">Instagram Veritabanı</a>
+            <div class="auth-tabs">
+                <div class="auth-tab active" onclick="switchAuthTab('login')">Giriş Yap</div>
+                <div class="auth-tab" onclick="switchAuthTab('register')">Kayıt Ol</div>
             </div>
 
-            <div class="glass-card reveal" style="padding: 2rem;">
-                <h3 class="widget-title">Sistem Verileri</h3>
-                <ul style="list-style: none; display: flex; flex-direction: column; gap: 1rem; color: var(--clr-text-muted); font-size: 0.9rem;">
-                    <li style="display: flex; justify-content: space-between; border-bottom: 1px solid var(--clr-border); padding-bottom: 0.5rem;">
-                        <span>Aktif Sunucu</span> <strong style="color: #fff;">EU-East</strong>
-                    </li>
-                    <li style="display: flex; justify-content: space-between; border-bottom: 1px solid var(--clr-border); padding-bottom: 0.5rem;">
-                        <span>Protokol</span> <strong style="color: #fff;">v1.0.44</strong>
-                    </li>
-                    <li style="display: flex; justify-content: space-between;">
-                        <span>Kurucu</span> <strong style="color: var(--clr-primary);">insanazor</strong>
-                    </li>
-                </ul>
-            </div>
-        </aside>
+            <form id="loginForm" class="auth-form active" onsubmit="event.preventDefault(); alert('Sisteme entegrasyon bekleniyor...');">
+                <div class="input-group">
+                    <label>Kullanıcı Adı veya E-Posta</label>
+                    <input type="text" placeholder="Giriş yapın..." required>
+                </div>
+                <div class="input-group">
+                    <label>Şifre</label>
+                    <input type="password" placeholder="••••••••" required>
+                </div>
+                <button type="submit" class="btn-submit">OTURUM AÇ</button>
+            </form>
 
+            <form id="registerForm" class="auth-form" onsubmit="event.preventDefault(); alert('Sisteme entegrasyon bekleniyor...');">
+                <div class="input-group">
+                    <label>Kullanıcı Adı</label>
+                    <input type="text" placeholder="Bir isim belirle..." required>
+                </div>
+                <div class="input-group">
+                    <label>E-Posta</label>
+                    <input type="email" placeholder="E-posta adresin..." required>
+                </div>
+                <div class="input-group">
+                    <label>Şifre</label>
+                    <input type="password" placeholder="••••••••" required>
+                </div>
+                <button type="submit" class="btn-submit">HESAP OLUŞTUR</button>
+            </form>
+
+            <div class="social-login">
+                <p style="font-size: 12px; color: #888; margin-bottom: 15px;">VEYA ŞUNLARLA DEVAM ET</p>
+                <button class="social-btn btn-google">Google ile Giriş Yap</button>
+                <button class="social-btn btn-discord">Discord ile Giriş Yap</button>
+            </div>
+        </div>
     </div>
 
-    <footer style="text-align: center; padding: 4rem 2rem; border-top: 1px solid var(--clr-border); margin-top: 4rem; background: #000;">
-        <p style="color: var(--clr-text-muted); font-size: 0.85rem;">
-            &copy; 2026 insanazor & Co. Tüm hakları saklıdır. Resmi bir Endnight Games projesi değildir.
-        </p>
-    </footer>
+    <div class="layout">
+        <main>
+            <div class="glass-card">
+                <span style="color: var(--clr-primary); font-weight: bold; font-size: 12px; letter-spacing: 2px;">SİSTEM DUYURUSU</span>
+                <h2>Premium Sisteme Hoş Geldiniz</h2>
+                <p>Yeni giriş panelimiz aktif edilmiştir. Artık topluluğa katılmak için sağ üstteki butonu kullanabilirsiniz.</p>
+                
+                <div id="haber1" class="article-content">
+                    <p>Bu sistem şimdilik sadece arayüz olarak çalışmaktadır. Veritabanı bağlandığında tüm üyeler kendi profillerini oluşturabilecek, rehberlere beğeni ve yorum atabilecektir.</p>
+                </div>
+                <button class="btn-read" onclick="toggleRead('haber1', this)">Detayları Gör</button>
+            </div>
+        </main>
+
+        <aside>
+            <div class="glass-card" style="padding: 25px;">
+                <h3 style="color: #fff; margin-bottom: 20px;">Kurucu</h3>
+                <div style="display: flex; align-items: center; gap: 15px;">
+                    <div style="width: 50px; height: 50px; background: var(--clr-primary); border-radius: 50%; display: flex; justify-content: center; align-items: center; color: #000; font-weight: bold; font-size: 20px;">İ</div>
+                    <div>
+                        <strong style="color: var(--clr-primary); font-size: 18px;">insanazor</strong>
+                        <p style="font-size: 12px; color: #888;">Sistem Yöneticisi</p>
+                    </div>
+                </div>
+            </div>
+        </aside>
+    </div>
 
     <script>
-        // 1. Navbar Scroll Efekti
-        window.addEventListener('scroll', () => {
-            const nav = document.getElementById('navbar');
-            if (window.scrollY > 50) {
-                nav.classList.add('scrolled');
-            } else {
-                nav.classList.remove('scrolled');
+        // Modal (Açılır Pencere) Kontrolleri
+        const overlay = document.getElementById('authOverlay');
+        
+        function openAuth() {
+            overlay.classList.add('active');
+        }
+
+        function closeAuth() {
+            overlay.classList.remove('active');
+        }
+
+        // Overlay'in dışına tıklayınca kapatma
+        overlay.addEventListener('click', function(e) {
+            if (e.target === overlay) {
+                closeAuth();
             }
         });
 
-        // 2. Performanslı Haber Aç/Kapat (Grid-Row)
-        function toggleArticle(id, btnElement) {
-            const wrapper = document.getElementById(id);
-            const isOpen = wrapper.classList.contains('is-open');
-            
-            if (isOpen) {
-                wrapper.classList.remove('is-open');
-                btnElement.innerHTML = 'Haberi Genişlet';
-                btnElement.style.background = 'transparent';
-                btnElement.style.color = 'var(--clr-primary)';
+        // Giriş ve Kayıt sekmeleri arasında geçiş
+        function switchAuthTab(tab) {
+            // Butonları güncelle
+            document.querySelectorAll('.auth-tab').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+
+            // Formları güncelle
+            document.querySelectorAll('.auth-form').forEach(form => form.classList.remove('active'));
+            if (tab === 'login') {
+                document.getElementById('loginForm').classList.add('active');
             } else {
-                wrapper.classList.add('is-open');
-                btnElement.innerHTML = 'Daralt';
-                btnElement.style.background = 'var(--clr-primary)';
-                btnElement.style.color = 'var(--clr-bg)';
+                document.getElementById('registerForm').classList.add('active');
             }
         }
 
-        // 3. Pro Seviye Scroll Görünüm Animasyonu (Intersection Observer)
-        const revealElements = document.querySelectorAll('.reveal');
-        
-        const revealObserver = new IntersectionObserver((entries, observer) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('active');
-                    observer.unobserve(entry.target); // Sadece bir kere animasyon oynasın
-                }
-            });
-        }, {
-            root: null,
-            threshold: 0.15, // Elemanın %15'i görününce tetikle
-            rootMargin: "0px 0px -50px 0px"
-        });
-
-        revealElements.forEach(el => revealObserver.observe(el));
+        // Haber okuma scripti
+        function toggleRead(id, btn) {
+            const content = document.getElementById(id);
+            content.classList.toggle('open');
+            btn.innerHTML = content.classList.contains('open') ? 'Daralt' : 'Detayları Gör';
+        }
     </script>
 </body>
 </html>
