@@ -3,191 +3,364 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>THE FOREST & SOTF | Pro Hub</title>
+    <title>THE FOREST TR | Premium Hub</title>
     <style>
+        /* --- 1. CORE DEĞİŞKENLER & RESET --- */
         :root {
-            --neon: #4eff4e;
-            --bg: #050805;
-            --card: rgba(15, 20, 15, 0.9);
-            --border: rgba(78, 255, 78, 0.15);
+            --clr-bg: #030504;
+            --clr-surface: rgba(12, 18, 14, 0.6);
+            --clr-surface-hover: rgba(18, 28, 20, 0.8);
+            --clr-primary: #5cb85c;
+            --clr-text: #e2e8f0;
+            --clr-text-muted: #94a3b8;
+            --clr-border: rgba(92, 184, 92, 0.15);
+            --transition-smooth: 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
         body {
-            background-color: var(--bg);
-            color: #e0e0e0;
-            font-family: 'Inter', sans-serif;
-            margin: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--clr-bg);
+            color: var(--clr-text);
+            line-height: 1.7;
+            overflow-x: hidden;
             background-image: 
-                linear-gradient(to bottom, rgba(5, 8, 5, 0.8), rgba(5, 8, 5, 0.9)),
+                radial-gradient(circle at top right, rgba(20, 40, 20, 0.4) 0%, transparent 40%),
+                radial-gradient(circle at bottom left, rgba(10, 20, 10, 0.8) 0%, transparent 50%),
                 url('https://images.alphacoders.com/130/1301384.jpeg');
             background-size: cover;
             background-attachment: fixed;
+            background-position: center;
         }
 
-        /* ÜST BAR */
-        nav {
-            padding: 20px 8%;
+        /* --- 2. ÖZEL SCROLLBAR --- */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--clr-bg); }
+        ::-webkit-scrollbar-thumb { background: rgba(92, 184, 92, 0.3); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--clr-primary); }
+
+        /* --- 3. PREMIUM NAVBAR --- */
+        .navbar {
+            position: fixed;
+            top: 0; width: 100%; z-index: 9999;
+            background: rgba(3, 5, 4, 0.85);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--clr-border);
+            padding: 1rem 5%;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: rgba(0,0,0,0.85);
-            backdrop-filter: blur(20px);
-            border-bottom: 1px solid var(--border);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
+            transition: var(--transition-smooth);
         }
 
-        .logo { font-size: 28px; font-weight: 900; color: var(--neon); text-transform: uppercase; letter-spacing: 2px; }
-        .logo span { color: #fff; }
+        .navbar.scrolled { padding: 0.8rem 5%; background: rgba(3, 5, 4, 0.95); }
 
-        /* ANA ALAN */
-        .container {
-            max-width: 1300px;
-            margin: 40px auto;
-            display: grid;
-            grid-template-columns: 2.5fr 1fr;
-            gap: 30px;
-            padding: 0 20px;
-        }
-
-        /* HABER KARTLARI */
-        .card {
-            background: var(--card);
-            border: 1px solid var(--border);
-            border-radius: 24px;
-            padding: 40px;
-            margin-bottom: 30px;
-            transition: 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            backdrop-filter: blur(10px);
-        }
-
-        .card:hover { border-color: var(--neon); box-shadow: 0 15px 40px rgba(78, 255, 78, 0.1); transform: translateY(-5px); }
-
-        .card h2 { color: #fff; margin: 15px 0; font-size: 32px; }
-
-        /* HABER OKUMA PANELİ */
-        .full-text { 
-            max-height: 0; 
-            overflow: hidden; 
-            transition: max-height 0.5s ease-out;
-            color: #b0b0b0;
-            line-height: 1.8;
-        }
-
-        .full-text.open { max-height: 2000px; padding-top: 20px; border-top: 1px solid var(--border); margin-top: 20px; }
-        
-        .read-btn {
-            background: linear-gradient(45deg, #1b301b, #2d5a27);
-            border: 1px solid var(--neon);
-            color: var(--neon);
-            padding: 12px 30px;
-            border-radius: 12px;
-            cursor: pointer;
-            font-weight: 800;
+        .brand {
+            font-size: 1.5rem;
+            font-weight: 900;
+            letter-spacing: -0.5px;
+            color: #fff;
             text-transform: uppercase;
-            transition: 0.3s;
+        }
+        .brand span { color: var(--clr-primary); }
+
+        /* --- 4. ANA DÜZEN (CSS GRID) --- */
+        .layout-grid {
+            max-width: 1400px;
+            margin: 120px auto 40px;
+            padding: 0 2rem;
+            display: grid;
+            grid-template-columns: 1fr 350px;
+            gap: 2.5rem;
         }
 
-        .read-btn:hover { background: var(--neon); color: #000; box-shadow: 0 0 20px var(--neon); }
-
-        /* YAN MENÜ */
-        .sidebar-widget {
-            background: rgba(255,255,255,0.03);
-            border-radius: 24px;
-            padding: 25px;
-            margin-bottom: 25px;
-            border: 1px solid var(--border);
+        /* --- 5. LÜKS KART TASARIMI --- */
+        .glass-card {
+            background: var(--clr-surface);
+            border: 1px solid var(--clr-border);
+            border-radius: 16px;
+            padding: 2.5rem;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            transition: var(--transition-smooth);
+            position: relative;
+            overflow: hidden;
         }
 
-        .social-btn {
+        .glass-card::before {
+            content: "";
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.03), transparent);
+            transform: translateX(-100%);
+            transition: 0.6s ease;
+        }
+
+        .glass-card:hover::before { transform: translateX(100%); }
+        .glass-card:hover { border-color: rgba(92, 184, 92, 0.4); background: var(--clr-surface-hover); }
+
+        .tag {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            background: rgba(92, 184, 92, 0.1);
+            color: var(--clr-primary);
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            border-radius: 100vw;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+            border: 1px solid rgba(92, 184, 92, 0.2);
+        }
+
+        .article-title {
+            font-size: 2rem;
+            font-weight: 800;
+            line-height: 1.2;
+            margin-bottom: 1rem;
+            color: #fff;
+        }
+
+        .article-excerpt { color: var(--clr-text-muted); font-size: 1.05rem; }
+
+        /* --- 6. PRO SEVİYE HABER AÇILMA ANİMASYONU (GRID-ROWS) --- */
+        .expandable-wrapper {
+            display: grid;
+            grid-template-rows: 0fr;
+            transition: grid-template-rows 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            margin-top: 1.5rem;
+        }
+
+        .expandable-wrapper.is-open { grid-template-rows: 1fr; }
+        
+        .expandable-inner { overflow: hidden; }
+
+        .article-full-content {
+            padding-top: 2rem;
+            margin-top: 2rem;
+            border-top: 1px solid var(--clr-border);
+            color: #cbd5e1;
+        }
+
+        .article-full-content img {
+            width: 100%;
+            border-radius: 12px;
+            margin: 1.5rem 0;
+            border: 1px solid var(--clr-border);
+        }
+
+        /* --- 7. MODERN BUTONLAR --- */
+        .btn-premium {
+            background: transparent;
+            color: var(--clr-primary);
+            border: 1px solid var(--clr-primary);
+            padding: 0.75rem 2rem;
+            font-size: 0.875rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .btn-premium:hover {
+            background: var(--clr-primary);
+            color: var(--clr-bg);
+            box-shadow: 0 0 20px rgba(92, 184, 92, 0.3);
+        }
+
+        /* --- 8. YAN MENÜ (SIDEBAR) --- */
+        .sidebar { display: flex; flex-direction: column; gap: 2rem; position: sticky; top: 120px; }
+
+        .widget-title {
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #fff;
+            margin-bottom: 1.5rem;
             display: flex;
             align-items: center;
-            justify-content: center;
-            padding: 15px;
-            margin-bottom: 12px;
-            border-radius: 15px;
-            text-decoration: none;
-            font-weight: bold;
-            color: white;
-            transition: 0.3s;
+            gap: 0.5rem;
         }
 
-        .dc { background: #5865F2; }
-        .ig { background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); }
+        .widget-title::before {
+            content: ""; display: block; width: 8px; height: 8px;
+            background: var(--clr-primary); border-radius: 50%;
+        }
 
-        /* YORUM BÖLÜMÜ */
-        #comment-box { margin-top: 50px; }
+        .social-link {
+            display: flex; justify-content: center; align-items: center;
+            padding: 1rem; border-radius: 8px; font-weight: 700;
+            text-decoration: none; color: #fff; margin-bottom: 1rem;
+            transition: transform 0.3s ease, filter 0.3s ease;
+        }
 
-        @media (max-width: 900px) { .container { grid-template-columns: 1fr; } }
+        .social-link:hover { transform: translateY(-3px); filter: brightness(1.2); }
+        .bg-discord { background: #5865F2; }
+        .bg-instagram { background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); }
+
+        /* --- 9. SCROLL ANİMASYONLARI (REVEAL) --- */
+        .reveal { opacity: 0; transform: translateY(30px); transition: 0.8s all cubic-bezier(0.16, 1, 0.3, 1); }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+
+        /* MOBİL DÜZEN */
+        @media (max-width: 1024px) {
+            .layout-grid { grid-template-columns: 1fr; padding: 0 1.5rem; }
+            .sidebar { position: static; }
+        }
     </style>
 </head>
 <body>
 
-    <nav>
-        <div class="logo">FOREST<span>TR</span></div>
-        <div style="font-size: 11px; letter-spacing: 1px; color: #888;">TOPLULUK MERKEZİ</div>
+    <nav class="navbar" id="navbar">
+        <div class="brand">FOREST<span>TR</span></div>
+        <div style="font-size: 0.75rem; letter-spacing: 2px; color: var(--clr-text-muted); text-transform: uppercase;">
+            Hayatta Kalma Merkezi
+        </div>
     </nav>
 
-    <div class="container">
+    <div class="layout-grid">
         
-        <main>
-            <div class="card">
-                <div style="display:flex; align-items:center; gap:10px;">
-                    <span style="background:var(--neon); color:#000; padding:4px 12px; border-radius:6px; font-size:12px; font-weight:900;">DUYURU</span>
-                    <small style="color:#666;">9 Nisan 2026</small>
-                </div>
-                <h2>Sons of the Forest v1.0 Yayınlandı!</h2>
-                <p>Beklenen gün geldi. Ormanın derinliklerindeki gizem nihayet çözülüyor.</p>
+        <main style="display: flex; flex-direction: column; gap: 2.5rem;">
+            
+            <article class="glass-card reveal">
+                <span class="tag">Resmi Güncelleme</span>
+                <h2 class="article-title">Sons of the Forest v1.0 Tam Sürüm Yayınlandı</h2>
+                <p class="article-excerpt">Yıllar süren erken erişim sürecinin ardından Endnight Games son sözü söyledi. Hikaye finali, yeni mağara sistemleri ve geliştirilmiş yapay zeka devrede.</p>
                 
-                <div class="full-text" id="content-1">
-                    <p>Tam sürümle birlikte oyunun sonu tamamen değişti. Yeni "Artifact" parçalarını birleştirerek adanın enerjisini kontrol edebilirsiniz. Ayrıca Kelvin ve Virginia için yeni kıyafetler ve komutlar eklendi. Grafiklerde yapılan optimizasyon sayesinde artık daha yüksek FPS ile hayatta kalabilirsiniz.</p>
-                    <img src="https://via.placeholder.com/800x400?text=SOTF+Ultra+Grafik" style="width: 100%; border-radius: 20px; margin: 20px 0; border: 1px solid var(--border);">
+                <div class="expandable-wrapper" id="content-1">
+                    <div class="expandable-inner">
+                        <div class="article-full-content">
+                            <p>Oyunun mimarisi tamamen baştan elden geçirildi. Artık yapay zeka takım arkadaşlarınız (Kelvin ve Virginia) savaş durumlarında çok daha rasyonel kararlar alabiliyor. Haritanın daha önce kapalı olan kuzeydoğu bölgesindeki devasa sığınak açıldı.</p>
+                            <img src="https://images.alphacoders.com/130/1301384.jpeg" alt="Oyun İçi Görüntü">
+                            <p><strong>Yama Notları Özet:</strong> Yeni 3 mutant türü, araç dinamiklerinde iyileştirme ve "Radyoaktif" statü efekti eklendi. Geliştirici ekip, mod desteği için altyapının sağlandığını doğruladı.</p>
+                        </div>
+                    </div>
                 </div>
-                
-                <button class="read-btn" onclick="toggleNews('content-1', this)">HABERİ OKU</button>
-            </div>
 
-            <div class="card" id="comment-box">
-                <h2>Topluluk Tartışması</h2>
-                <p style="color:#888; font-size: 14px;">Google, Discord veya kendi oluşturacağınız hesapla yorum yapabilirsiniz.</p>
+                <button class="btn-premium toggle-btn" onclick="toggleArticle('content-1', this)">
+                    Haberi Genişlet
+                </button>
+            </article>
+
+            <article class="glass-card reveal">
+                <span class="tag">Taktik Rehber</span>
+                <h2 class="article-title">Modern Balta İçin Hızlı Koşu (Speedrun) Rotası</h2>
+                <p class="article-excerpt">Oyunun ilk 10 dakikasında savunmasız kalmamak için en güçlü yakın dövüş silahını en az riskle alma rehberi.</p>
+                
+                <div class="expandable-wrapper" id="content-2">
+                    <div class="expandable-inner">
+                        <div class="article-full-content">
+                            <p>Helikopterin düştüğü noktadan bağımsız olarak, pusulanızı kullanarak merkezi gölün güneybatısındaki kampa ilerleyin. GPS cihazınızdaki "Mor" ünlem işaretlerinden batıda olanı mağaranın girişidir.</p>
+                            <p>İçeri girerken yanınızda sadece çakmak olması yeterli. İlk ip inişinden sonra düşmanlarla karşılaşmadan sol duvardan sürünerek ilerlerseniz, baltanın bulunduğu çadıra direkt ulaşabilirsiniz.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="btn-premium toggle-btn" onclick="toggleArticle('content-2', this)">
+                    Rehberi İncele
+                </button>
+            </article>
+
+            <article class="glass-card reveal" style="margin-top: 2rem;">
+                <h2 class="article-title" style="font-size: 1.5rem;">Saha Raporları (Yorumlar)</h2>
+                <p style="color: var(--clr-text-muted); font-size: 0.9rem; margin-bottom: 2rem;">Deneyimlerinizi, üs koordinatlarınızı veya sorularınızı paylaşın.</p>
                 
                 <div id="cusdis_thread"
                   data-host="https://cusdis.com"
                   data-app-id="69e2629b-8980-4966-96a2-63467664d55b"
-                  data-page-id="forest_tr_main"
+                  data-page-id="insanazor_main"
                   data-page-url="https://serkanurcanberat-boop.github.io/theforestfan/"
-                  data-page-title="Forest TR Ana Sayfa">
+                  data-page-title="Forest TR">
                 </div>
                 <script async defer src="https://cusdis.com/js/cusdis.es.js"></script>
-                </div>
+            </article>
+
         </main>
 
-        <aside>
-            <div class="sidebar-widget">
-                <h3 style="margin-top:0">Resmi Kanallar</h3>
-                <a href="LINK_BURAYA" class="social-btn dc">Discord Sunucumuz</a>
-                <a href="LINK_BURAYA" class="social-btn ig">Instagram Sayfamız</a>
+        <aside class="sidebar">
+            <div class="glass-card reveal" style="padding: 2rem;">
+                <h3 class="widget-title">İletişim Ağları</h3>
+                <a href="#" class="social-link bg-discord">Discord Ağına Bağlan</a>
+                <a href="#" class="social-link bg-instagram">Instagram Veritabanı</a>
             </div>
 
-            <div class="sidebar-widget">
-                <h3 style="margin-top:0">Hızlı Linkler</h3>
-                <ul style="padding:0; list-style:none;">
-                    <li style="padding:10px 0; border-bottom:1px solid rgba(255,255,255,0.05);"><a href="#" style="color:var(--neon); text-decoration:none;">⚒️ Modern Balta Rehberi</a></li>
-                    <li style="padding:10px 0; border-bottom:1px solid rgba(255,255,255,0.05);"><a href="#" style="color:var(--neon); text-decoration:none;">🗺️ İnteraktif Harita</a></li>
-                    <li style="padding:10px 0;"><a href="#" style="color:var(--neon); text-decoration:none;">🧪 Crafting Listesi</a></li>
+            <div class="glass-card reveal" style="padding: 2rem;">
+                <h3 class="widget-title">Sistem Verileri</h3>
+                <ul style="list-style: none; display: flex; flex-direction: column; gap: 1rem; color: var(--clr-text-muted); font-size: 0.9rem;">
+                    <li style="display: flex; justify-content: space-between; border-bottom: 1px solid var(--clr-border); padding-bottom: 0.5rem;">
+                        <span>Aktif Sunucu</span> <strong style="color: #fff;">EU-East</strong>
+                    </li>
+                    <li style="display: flex; justify-content: space-between; border-bottom: 1px solid var(--clr-border); padding-bottom: 0.5rem;">
+                        <span>Protokol</span> <strong style="color: #fff;">v1.0.44</strong>
+                    </li>
+                    <li style="display: flex; justify-content: space-between;">
+                        <span>Kurucu</span> <strong style="color: var(--clr-primary);">insanazor</strong>
+                    </li>
                 </ul>
             </div>
         </aside>
 
     </div>
 
+    <footer style="text-align: center; padding: 4rem 2rem; border-top: 1px solid var(--clr-border); margin-top: 4rem; background: #000;">
+        <p style="color: var(--clr-text-muted); font-size: 0.85rem;">
+            &copy; 2026 insanazor & Co. Tüm hakları saklıdır. Resmi bir Endnight Games projesi değildir.
+        </p>
+    </footer>
+
     <script>
-        function toggleNews(id, btn) {
-            const content = document.getElementById(id);
-            content.classList.toggle('open');
-            btn.innerHTML = content.classList.contains('open') ? 'KAPAT' : 'HABERİ OKU';
+        // 1. Navbar Scroll Efekti
+        window.addEventListener('scroll', () => {
+            const nav = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                nav.classList.add('scrolled');
+            } else {
+                nav.classList.remove('scrolled');
+            }
+        });
+
+        // 2. Performanslı Haber Aç/Kapat (Grid-Row)
+        function toggleArticle(id, btnElement) {
+            const wrapper = document.getElementById(id);
+            const isOpen = wrapper.classList.contains('is-open');
+            
+            if (isOpen) {
+                wrapper.classList.remove('is-open');
+                btnElement.innerHTML = 'Haberi Genişlet';
+                btnElement.style.background = 'transparent';
+                btnElement.style.color = 'var(--clr-primary)';
+            } else {
+                wrapper.classList.add('is-open');
+                btnElement.innerHTML = 'Daralt';
+                btnElement.style.background = 'var(--clr-primary)';
+                btnElement.style.color = 'var(--clr-bg)';
+            }
         }
+
+        // 3. Pro Seviye Scroll Görünüm Animasyonu (Intersection Observer)
+        const revealElements = document.querySelectorAll('.reveal');
+        
+        const revealObserver = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                    observer.unobserve(entry.target); // Sadece bir kere animasyon oynasın
+                }
+            });
+        }, {
+            root: null,
+            threshold: 0.15, // Elemanın %15'i görününce tetikle
+            rootMargin: "0px 0px -50px 0px"
+        });
+
+        revealElements.forEach(el => revealObserver.observe(el));
     </script>
 </body>
 </html>
