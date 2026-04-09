@@ -3,258 +3,232 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>THE FOREST TR | Premium Hub</title>
+    <title>FOREST HUB | Multi-Verse</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&family=Orbitron:wght@400;900&display=swap" rel="stylesheet">
     <style>
-        /* --- CORE DEĞİŞKENLER & RESET --- */
         :root {
-            --clr-bg: #030504;
-            --clr-surface: rgba(12, 18, 14, 0.7);
-            --clr-primary: #4eff4e;
-            --clr-text: #e2e8f0;
-            --clr-border: rgba(78, 255, 78, 0.2);
-            --transition: 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            /* Başlangıç Teması (SOTF - Neon Yeşil) */
+            --primary: #4eff4e;
+            --bg: #020402;
+            --card-bg: rgba(10, 15, 10, 0.8);
+            --border: rgba(78, 255, 78, 0.2);
+            --shadow: 0 0 20px rgba(78, 255, 78, 0.2);
+            --font-main: 'Inter', sans-serif;
+            --font-title: 'Orbitron', sans-serif;
+            --transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
         }
 
-        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        /* The Forest Teması (Kan Kırmızısı / Toprak) */
+        body.original-forest {
+            --primary: #ff4e4e;
+            --bg: #090404;
+            --card-bg: rgba(20, 10, 10, 0.8);
+            --border: rgba(255, 78, 78, 0.2);
+            --shadow: 0 0 20px rgba(255, 78, 78, 0.2);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
 
         body {
-            font-family: 'Segoe UI', system-ui, sans-serif;
-            background-color: var(--clr-bg);
-            color: var(--clr-text);
-            line-height: 1.7;
+            background-color: var(--bg);
+            color: #eee;
+            font-family: var(--font-main);
+            transition: var(--transition);
+            min-height: 100vh;
             overflow-x: hidden;
-            background-image: 
-                linear-gradient(to bottom, rgba(3, 5, 4, 0.8), rgba(3, 5, 4, 0.95)),
-                url('https://images.alphacoders.com/130/1301384.jpeg');
-            background-size: cover;
-            background-attachment: fixed;
         }
 
-        /* --- NAVBAR & GİRİŞ BUTONU --- */
-        .navbar {
-            position: fixed; top: 0; width: 100%; z-index: 1000;
-            background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(20px);
-            border-bottom: 1px solid var(--clr-border);
-            padding: 15px 5%; display: flex; justify-content: space-between; align-items: center;
-        }
-
-        .brand { font-size: 1.8rem; font-weight: 900; color: #fff; text-transform: uppercase; letter-spacing: 1px; }
-        .brand span { color: var(--clr-primary); text-shadow: 0 0 15px var(--clr-primary); }
-
-        .btn-login {
-            background: rgba(78, 255, 78, 0.1);
-            color: var(--clr-primary);
-            border: 1px solid var(--clr-primary);
-            padding: 8px 25px; border-radius: 8px;
-            font-weight: 800; cursor: pointer; letter-spacing: 1px;
-            transition: var(--transition);
-        }
-
-        .btn-login:hover { background: var(--clr-primary); color: #000; box-shadow: 0 0 20px rgba(78, 255, 78, 0.4); }
-
-        /* --- GİRİŞ / KAYIT MODALI (AÇILIR PENCERE) --- */
-        .auth-overlay {
+        /* DİNAMİK ARKA PLAN */
+        .bg-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.8); backdrop-filter: blur(8px);
-            display: flex; justify-content: center; align-items: center;
-            z-index: 9999; opacity: 0; pointer-events: none;
-            transition: var(--transition);
+            z-index: -1; transition: var(--transition);
+            background-size: cover; background-position: center; filter: brightness(0.3);
         }
 
-        .auth-overlay.active { opacity: 1; pointer-events: auto; }
-
-        .auth-modal {
-            background: rgba(15, 20, 15, 0.95);
-            border: 1px solid var(--clr-border);
-            border-radius: 20px; width: 400px; max-width: 90%;
-            padding: 40px; transform: translateY(50px);
-            transition: var(--transition);
-            box-shadow: 0 20px 50px rgba(0,0,0,0.8);
-            position: relative;
+        /* HEADER & SELECTOR */
+        nav {
+            padding: 20px 5%; display: flex; justify-content: space-between; align-items: center;
+            background: rgba(0,0,0,0.9); backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 1000;
         }
 
-        .auth-overlay.active .auth-modal { transform: translateY(0); }
-
-        .close-btn {
-            position: absolute; top: 15px; right: 20px;
-            font-size: 24px; color: #888; cursor: pointer; transition: 0.3s;
+        .engine-selector { display: flex; gap: 10px; background: #111; padding: 5px; border-radius: 12px; border: 1px solid #333; }
+        .engine-btn {
+            padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer;
+            font-family: var(--font-title); font-size: 11px; font-weight: 900;
+            transition: var(--transition); color: #555; background: transparent;
         }
-        .close-btn:hover { color: var(--clr-primary); }
+        .engine-btn.active { background: var(--primary); color: #000; box-shadow: var(--shadow); }
 
-        /* Sekmeler */
-        .auth-tabs { display: flex; margin-bottom: 30px; border-bottom: 2px solid rgba(255,255,255,0.1); }
-        .auth-tab {
-            flex: 1; text-align: center; padding: 10px; cursor: pointer;
-            font-weight: bold; color: #888; transition: 0.3s;
+        /* AUTH BUTTONS */
+        .auth-zone { display: flex; gap: 15px; align-items: center; }
+        .user-tag { color: var(--primary); font-weight: bold; display: none; }
+        .btn-auth {
+            background: var(--primary); color: #000; border: none;
+            padding: 10px 25px; border-radius: 8px; font-weight: 900;
+            cursor: pointer; transition: 0.3s; font-family: var(--font-title);
         }
-        .auth-tab.active { color: var(--clr-primary); border-bottom: 2px solid var(--clr-primary); margin-bottom: -2px; }
+        .btn-auth:hover { transform: scale(1.05); filter: brightness(1.2); }
 
-        /* Form Elemanları */
-        .auth-form { display: none; }
-        .auth-form.active { display: block; animation: fadeIn 0.4s ease forwards; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateX(-10px); } to { opacity: 1; transform: translateX(0); } }
-
-        .input-group { margin-bottom: 20px; }
-        .input-group label { display: block; font-size: 12px; color: #aaa; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 1px; }
-        .input-group input {
-            width: 100%; padding: 12px; background: rgba(0,0,0,0.5);
-            border: 1px solid rgba(255,255,255,0.1); border-radius: 8px;
-            color: #fff; font-size: 16px; transition: 0.3s;
+        /* MODAL SYSTEM */
+        .modal {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.9); backdrop-filter: blur(10px);
+            display: none; justify-content: center; align-items: center; z-index: 2000;
         }
-        .input-group input:focus { outline: none; border-color: var(--clr-primary); box-shadow: 0 0 10px rgba(78,255,78,0.2); }
-
-        .btn-submit {
-            width: 100%; padding: 15px; background: var(--clr-primary);
-            color: #000; border: none; border-radius: 8px;
-            font-weight: 900; font-size: 16px; cursor: pointer; transition: 0.3s; margin-top: 10px;
+        .modal-content {
+            background: var(--card-bg); border: 1px solid var(--border);
+            padding: 40px; border-radius: 24px; width: 400px; box-shadow: var(--shadow);
+            position: relative; text-align: center;
         }
-        .btn-submit:hover { box-shadow: 0 0 20px rgba(78,255,78,0.4); transform: translateY(-2px); }
+        .close-modal { position: absolute; top: 20px; right: 20px; cursor: pointer; color: var(--primary); font-size: 24px; }
 
-        /* Sosyal Girişler */
-        .social-login { margin-top: 25px; text-align: center; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px; }
-        .social-btn {
-            display: block; width: 100%; padding: 12px; margin-bottom: 10px;
-            border-radius: 8px; border: none; font-weight: bold; color: #fff; cursor: pointer; transition: 0.3s;
+        input {
+            width: 100%; padding: 15px; margin: 10px 0; background: rgba(0,0,0,0.5);
+            border: 1px solid var(--border); border-radius: 8px; color: #fff;
         }
-        .btn-google { background: #db4437; }
-        .btn-discord { background: #5865F2; }
-        .social-btn:hover { filter: brightness(1.2); }
 
-        /* --- ANA DÜZEN --- */
-        .layout { max-width: 1300px; margin: 120px auto; padding: 0 20px; display: grid; grid-template-columns: 2fr 1fr; gap: 30px; }
-
-        .glass-card { background: var(--clr-surface); border: 1px solid var(--clr-border); border-radius: 20px; padding: 40px; backdrop-filter: blur(15px); margin-bottom: 30px; }
-        .glass-card h2 { font-size: 28px; color: #fff; margin-bottom: 15px; }
+        /* MAIN LAYOUT */
+        .hero { padding: 100px 5% 50px; text-align: center; }
+        .hero h1 { font-family: var(--font-title); font-size: 4rem; text-transform: uppercase; margin-bottom: 10px; }
         
-        .article-content { max-height: 0; overflow: hidden; transition: max-height 0.5s ease-out; }
-        .article-content.open { max-height: 1000px; margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--clr-border); }
+        .grid { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; padding: 40px 20px; }
+        .card { background: var(--card-bg); border: 1px solid var(--border); padding: 30px; border-radius: 20px; transition: 0.3s; }
+        .card:hover { transform: translateY(-10px); border-color: var(--primary); box-shadow: var(--shadow); }
 
-        .btn-read { background: transparent; color: var(--clr-primary); border: 1px solid var(--clr-primary); padding: 10px 20px; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 20px; transition: 0.3s; }
-        .btn-read:hover { background: var(--clr-primary); color: #000; }
+        footer { text-align: center; padding: 50px; border-top: 1px solid var(--border); opacity: 0.5; }
 
-        @media (max-width: 900px) { .layout { grid-template-columns: 1fr; } }
     </style>
 </head>
-<body>
+<body id="mainBody">
 
-    <nav class="navbar">
-        <div class="brand">FOREST<span>TR</span></div>
-        <button class="btn-login" onclick="openAuth()">GİRİŞ YAP</button>
+    <div class="bg-overlay" id="dynamicBg"></div>
+
+    <nav>
+        <div class="engine-selector">
+            <button class="engine-btn active" id="btnSotf" onclick="switchGame('sotf')">Sons of Forest</button>
+            <button class="engine-btn" id="btnForest" onclick="switchGame('forest')">The Forest</button>
+        </div>
+
+        <div class="auth-zone">
+            <span class="user-tag" id="userDisplay">Hoş geldin, <span id="userName"></span></span>
+            <button class="btn-auth" id="loginBtn" onclick="toggleModal('authModal')">GİRİŞ / KAYIT</button>
+            <button class="btn-auth" id="logoutBtn" style="display:none; background:#333; color:#fff" onclick="logout()">ÇIKIŞ</button>
+        </div>
     </nav>
 
-    <div class="auth-overlay" id="authOverlay">
-        <div class="auth-modal">
-            <span class="close-btn" onclick="closeAuth()">&times;</span>
-            
-            <div class="auth-tabs">
-                <div class="auth-tab active" onclick="switchAuthTab('login')">Giriş Yap</div>
-                <div class="auth-tab" onclick="switchAuthTab('register')">Kayıt Ol</div>
-            </div>
+    <div class="hero">
+        <h1 id="mainTitle">SONS OF THE FOREST</h1>
+        <p id="subTitle" style="color: var(--primary); letter-spacing: 5px; font-weight: bold;">ULTRA FAN HUB</p>
+    </div>
 
-            <form id="loginForm" class="auth-form active" onsubmit="event.preventDefault(); alert('Sisteme entegrasyon bekleniyor...');">
-                <div class="input-group">
-                    <label>Kullanıcı Adı veya E-Posta</label>
-                    <input type="text" placeholder="Giriş yapın..." required>
-                </div>
-                <div class="input-group">
-                    <label>Şifre</label>
-                    <input type="password" placeholder="••••••••" required>
-                </div>
-                <button type="submit" class="btn-submit">OTURUM AÇ</button>
-            </form>
-
-            <form id="registerForm" class="auth-form" onsubmit="event.preventDefault(); alert('Sisteme entegrasyon bekleniyor...');">
-                <div class="input-group">
-                    <label>Kullanıcı Adı</label>
-                    <input type="text" placeholder="Bir isim belirle..." required>
-                </div>
-                <div class="input-group">
-                    <label>E-Posta</label>
-                    <input type="email" placeholder="E-posta adresin..." required>
-                </div>
-                <div class="input-group">
-                    <label>Şifre</label>
-                    <input type="password" placeholder="••••••••" required>
-                </div>
-                <button type="submit" class="btn-submit">HESAP OLUŞTUR</button>
-            </form>
-
-            <div class="social-login">
-                <p style="font-size: 12px; color: #888; margin-bottom: 15px;">VEYA ŞUNLARLA DEVAM ET</p>
-                <button class="social-btn btn-google">Google ile Giriş Yap</button>
-                <button class="social-btn btn-discord">Discord ile Giriş Yap</button>
-            </div>
+    <div class="grid">
+        <div class="card">
+            <h3 id="cardTitle1">v1.0 Yaması Yayında</h3>
+            <p>Oyunun son halindeki tüm detaylar ve gizli sonlar burada.</p>
+        </div>
+        <div class="card">
+            <h3>Harita Entegrasyonu</h3>
+            <p>Tüm mağara girişlerini ve önemli itemları anında bul.</p>
+        </div>
+        <div class="card">
+            <h3>Topluluk Sohbeti</h3>
+            <p>1000+ kullanıcıya özel Discord kanalımıza katılmayı unutma.</p>
         </div>
     </div>
 
-    <div class="layout">
-        <main>
-            <div class="glass-card">
-                <span style="color: var(--clr-primary); font-weight: bold; font-size: 12px; letter-spacing: 2px;">SİSTEM DUYURUSU</span>
-                <h2>Premium Sisteme Hoş Geldiniz</h2>
-                <p>Yeni giriş panelimiz aktif edilmiştir. Artık topluluğa katılmak için sağ üstteki butonu kullanabilirsiniz.</p>
-                
-                <div id="haber1" class="article-content">
-                    <p>Bu sistem şimdilik sadece arayüz olarak çalışmaktadır. Veritabanı bağlandığında tüm üyeler kendi profillerini oluşturabilecek, rehberlere beğeni ve yorum atabilecektir.</p>
-                </div>
-                <button class="btn-read" onclick="toggleRead('haber1', this)">Detayları Gör</button>
-            </div>
-        </main>
-
-        <aside>
-            <div class="glass-card" style="padding: 25px;">
-                <h3 style="color: #fff; margin-bottom: 20px;">Kurucu</h3>
-                <div style="display: flex; align-items: center; gap: 15px;">
-                    <div style="width: 50px; height: 50px; background: var(--clr-primary); border-radius: 50%; display: flex; justify-content: center; align-items: center; color: #000; font-weight: bold; font-size: 20px;">İ</div>
-                    <div>
-                        <strong style="color: var(--clr-primary); font-size: 18px;">insanazor</strong>
-                        <p style="font-size: 12px; color: #888;">Sistem Yöneticisi</p>
-                    </div>
-                </div>
-            </div>
-        </aside>
+    <div class="modal" id="authModal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="toggleModal('authModal')">&times;</span>
+            <h2 style="font-family: var(--font-title); color: var(--primary);">SİSTEME ERİŞ</h2>
+            <p style="font-size: 12px; margin-bottom: 20px; opacity: 0.6;">Veritabanına Kayıt Ol veya Giriş Yap</p>
+            
+            <input type="text" id="authName" placeholder="Kullanıcı Adı">
+            <input type="password" id="authPass" placeholder="Şifre">
+            <button class="btn-auth" style="width: 100%; margin-top: 20px;" onclick="handleAuth()">GİRİŞ YAP / KAYIT OL</button>
+            
+            <p style="font-size: 10px; margin-top: 15px;">Google ve Discord girişi API bağlantısı bekliyor...</p>
+        </div>
     </div>
 
+    <footer>
+        &copy; 2026 FOREST HUB | Created by <strong>insanazor</strong>
+    </footer>
+
     <script>
-        // Modal (Açılır Pencere) Kontrolleri
-        const overlay = document.getElementById('authOverlay');
-        
-        function openAuth() {
-            overlay.classList.add('active');
-        }
-
-        function closeAuth() {
-            overlay.classList.remove('active');
-        }
-
-        // Overlay'in dışına tıklayınca kapatma
-        overlay.addEventListener('click', function(e) {
-            if (e.target === overlay) {
-                closeAuth();
+        // --- OYUN DEĞİŞTİRME MOTORU ---
+        const data = {
+            sotf: {
+                title: "SONS OF THE FOREST",
+                sub: "ULTRA FAN HUB",
+                bg: "https://images.alphacoders.com/130/1301384.jpeg",
+                card1: "v1.0 Yaması Yayında",
+                bodyClass: ""
+            },
+            forest: {
+                title: "THE FOREST",
+                sub: "CLASSIC SURVIVAL",
+                bg: "https://images.alphacoders.com/530/530691.jpg",
+                card1: "Katana Nerede Bulunur?",
+                bodyClass: "original-forest"
             }
-        });
+        };
 
-        // Giriş ve Kayıt sekmeleri arasında geçiş
-        function switchAuthTab(tab) {
-            // Butonları güncelle
-            document.querySelectorAll('.auth-tab').forEach(btn => btn.classList.remove('active'));
-            event.target.classList.add('active');
+        function switchGame(game) {
+            const config = data[game];
+            document.getElementById('mainBody').className = config.bodyClass;
+            document.getElementById('mainTitle').innerText = config.title;
+            document.getElementById('subTitle').innerText = config.sub;
+            document.getElementById('cardTitle1').innerText = config.card1;
+            document.getElementById('dynamicBg').style.backgroundImage = `url('${config.bg}')`;
+            
+            // Buton Aktifliği
+            document.getElementById('btnSotf').classList.toggle('active', game === 'sotf');
+            document.getElementById('btnForest').classList.toggle('active', game === 'forest');
+        }
 
-            // Formları güncelle
-            document.querySelectorAll('.auth-form').forEach(form => form.classList.remove('active'));
-            if (tab === 'login') {
-                document.getElementById('loginForm').classList.add('active');
-            } else {
-                document.getElementById('registerForm').classList.add('active');
+        // --- BASİT VERİTABANI MOTORU (LocalDB) ---
+        function handleAuth() {
+            const name = document.getElementById('authName').value;
+            const pass = document.getElementById('authPass').value;
+
+            if(name.length < 3 || pass.length < 3) {
+                alert("Lütfen geçerli bir kullanıcı adı ve şifre gir!");
+                return;
+            }
+
+            // Basit Kayıt/Giriş Mantığı
+            localStorage.setItem('forestUser', name);
+            checkUser();
+            toggleModal('authModal');
+        }
+
+        function checkUser() {
+            const user = localStorage.getItem('forestUser');
+            if(user) {
+                document.getElementById('loginBtn').style.display = 'none';
+                document.getElementById('logoutBtn').style.display = 'block';
+                document.getElementById('userDisplay').style.display = 'block';
+                document.getElementById('userName').innerText = user;
             }
         }
 
-        // Haber okuma scripti
-        function toggleRead(id, btn) {
-            const content = document.getElementById(id);
-            content.classList.toggle('open');
-            btn.innerHTML = content.classList.contains('open') ? 'Daralt' : 'Detayları Gör';
+        function logout() {
+            localStorage.removeItem('forestUser');
+            location.reload();
         }
+
+        // --- MODAL KONTROL ---
+        function toggleModal(id) {
+            const m = document.getElementById(id);
+            m.style.display = (m.style.display === 'flex') ? 'none' : 'flex';
+        }
+
+        // Sayfa Yüklendiğinde
+        window.onload = () => {
+            switchGame('sotf');
+            checkUser();
+        };
     </script>
 </body>
 </html>
