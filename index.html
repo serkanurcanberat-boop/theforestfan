@@ -3,26 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FOREST HUB | Live Cloud</title>
+    <title>FOREST HUB | Live Stream Edition</title>
     
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&family=Orbitron:wght@500;900&display=swap" rel="stylesheet">
     <style>
-        /* Dünkü Lüks CSS Ayarları Aynen Korundu */
         :root {
             --primary: #00ff41;
             --primary-glow: rgba(0, 255, 65, 0.3);
             --bg: #000000;
-            --surface: rgba(15, 15, 15, 0.8);
+            --surface: rgba(15, 15, 15, 0.85);
             --border: rgba(255, 255, 255, 0.08);
             --text-main: #e2e8f0;
-            --transition: all 0.5s cubic-bezier(0.2, 1, 0.2, 1);
+            --alert: #ff2a2a;
+            --transition: all 0.4s cubic-bezier(0.2, 1, 0.2, 1);
         }
 
-        body.red-mode { --primary: #ff0000; --primary-glow: rgba(255, 0, 0, 0.3); }
-        * { box-sizing: border-box; margin: 0; padding: 0; outline: none; }
-        body { background: var(--bg); color: var(--text-main); font-family: 'Plus Jakarta Sans', sans-serif; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { 
+            background: var(--bg); color: var(--text-main); 
+            font-family: 'Plus Jakarta Sans', sans-serif; overflow-x: hidden;
+            background-image: radial-gradient(circle at 50% 0%, rgba(0, 255, 65, 0.05) 0%, transparent 70%);
+        }
+
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #000; }
+        ::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 10px; }
 
         /* NAVBAR */
         nav {
@@ -30,42 +37,66 @@
             padding: 15px 5%; display: flex; justify-content: space-between; align-items: center;
             background: rgba(0,0,0,0.8); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border);
         }
-
-        .brand { font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 1.5rem; }
+        .brand { font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 1.5rem; letter-spacing: 1px; }
         .brand span { color: var(--primary); text-shadow: 0 0 20px var(--primary-glow); }
 
-        /* BUTONLAR */
         .btn-main {
-            padding: 12px 25px; background: var(--primary); color: #000;
-            border: none; border-radius: 10px; font-weight: 800; cursor: pointer;
-            font-family: 'Orbitron'; transition: var(--transition);
+            padding: 10px 20px; background: var(--primary); color: #000;
+            border: none; border-radius: 8px; font-weight: 800; cursor: pointer;
+            font-family: 'Orbitron'; transition: var(--transition); font-size: 12px;
         }
-        .btn-main:hover { transform: translateY(-3px); box-shadow: 0 10px 20px var(--primary-glow); }
+        .btn-main:hover { transform: translateY(-2px); box-shadow: 0 5px 20px var(--primary-glow); }
 
-        /* HABER KARTLARI (DİNAMİK) */
-        .container { max-width: 1200px; margin: 120px auto 50px; padding: 0 20px; }
-        .news-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 25px; }
+        /* HERO SECTION */
+        .hero {
+            height: 40vh; display: flex; flex-direction: column; justify-content: center; align-items: center;
+            text-align: center; background: linear-gradient(to bottom, transparent, #000), url('https://images.alphacoders.com/130/1301384.jpeg');
+            background-size: cover; background-position: center; border-bottom: 1px solid var(--border); margin-bottom: 40px;
+        }
+        .hero h1 { font-family: 'Orbitron', sans-serif; font-size: 3rem; margin-top: 50px;}
+
+        /* LIVE FEED SECTION */
+        .container { max-width: 1000px; margin: 0 auto 50px; padding: 0 20px; }
         
-        .news-card {
-            background: var(--surface); border: 1px solid var(--border);
-            padding: 30px; border-radius: 20px; transition: var(--transition);
-        }
-        .news-card:hover { transform: scale(1.03); border-color: var(--primary); box-shadow: 0 0 30px var(--primary-glow); }
+        .live-header { display: flex; align-items: center; gap: 15px; margin-bottom: 30px; font-family: 'Orbitron'; }
+        .live-indicator { width: 12px; height: 12px; background: var(--alert); border-radius: 50%; box-shadow: 0 0 15px var(--alert); animation: pulse 1.5s infinite; }
+        
+        @keyframes pulse { 0% { transform: scale(0.95); opacity: 0.8; } 50% { transform: scale(1.2); opacity: 1; } 100% { transform: scale(0.95); opacity: 0.8; } }
 
-        /* YORUM ALANI */
-        .community-section { max-width: 800px; margin: 50px auto; padding: 30px; background: #050505; border-radius: 20px; border: 1px solid var(--border); }
-        .comment { padding: 15px; border-bottom: 1px solid var(--border); display: flex; flex-direction: column; gap: 5px; }
-        .comment strong { color: var(--primary); font-size: 0.9rem; }
-        .comment p { font-size: 0.95rem; opacity: 0.8; }
-
-        /* AUTH MODAL */
-        .modal {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.95); display: none; justify-content: center; align-items: center; z-index: 2000;
+        .feed-card {
+            background: var(--surface); border-left: 4px solid var(--primary);
+            padding: 25px; border-radius: 0 15px 15px 0; margin-bottom: 20px;
+            transition: var(--transition); position: relative; overflow: hidden;
         }
+        .feed-card:hover { transform: translateX(10px); background: rgba(20, 25, 20, 0.95); box-shadow: -5px 0 20px var(--primary-glow); }
+        .feed-card.event { border-left-color: #ff9900; }
+        .feed-card.event:hover { box-shadow: -5px 0 20px rgba(255, 153, 0, 0.3); }
+
+        .feed-time { font-size: 11px; color: #888; font-family: 'Orbitron'; margin-bottom: 8px; display: block; }
+        .feed-title { font-size: 1.4rem; margin-bottom: 10px; color: #fff; }
+        
+        /* COMMENTS */
+        .community-section { max-width: 1000px; margin: 0 auto 50px; padding: 30px; background: rgba(5,5,5,0.8); border-radius: 20px; border: 1px solid var(--border); }
+        .comment-item { padding: 15px; border-bottom: 1px solid rgba(255,255,255,0.03); margin-bottom: 10px; }
+        .comment-item strong { color: var(--primary); display: block; margin-bottom: 5px; font-family: 'Orbitron'; letter-spacing: 1px;}
+
+        /* FOOTER & SOCIALS */
+        footer { border-top: 1px solid var(--border); padding: 40px 20px; text-align: center; background: #020202; }
+        .social-links { display: flex; justify-content: center; gap: 20px; margin-bottom: 20px; }
+        .social-btn {
+            padding: 12px 30px; border-radius: 50px; text-decoration: none; font-weight: bold; font-family: 'Orbitron'; font-size: 12px;
+            transition: var(--transition); border: 1px solid var(--border); color: #fff;
+        }
+        /* LİNKLERİ BURAYA YAPIŞTIRACAKSIN */
+        .social-btn.insta:hover { background: #E1306C; border-color: #E1306C; }
+        .social-btn.discord:hover { background: #5865F2; border-color: #5865F2; }
+        .social-btn.youtube:hover { background: #FF0000; border-color: #FF0000; }
+
+        /* MODAL */
+        .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); display: none; justify-content: center; align-items: center; z-index: 2000; backdrop-filter: blur(10px); }
         .modal.active { display: flex; }
-        .auth-form { background: #0a0a0a; padding: 40px; border-radius: 20px; border: 1px solid var(--primary); width: 350px; text-align: center; }
-        input { width: 100%; padding: 12px; margin-bottom: 15px; background: #000; border: 1px solid var(--border); color: #fff; border-radius: 8px; }
+        .auth-form { background: #0a0a0a; padding: 40px; border-radius: 20px; border: 1px solid var(--primary); width: 100%; max-width: 400px; text-align: center; box-shadow: 0 0 30px var(--primary-glow); }
+        input { width: 100%; padding: 15px; margin-bottom: 15px; background: #000; border: 1px solid var(--border); color: #fff; border-radius: 8px; font-family: inherit; }
     </style>
 </head>
 <body id="body">
@@ -73,123 +104,130 @@
     <nav>
         <div class="brand">FOREST<span>HUB</span></div>
         <div id="userSection">
-            <button class="btn-main" onclick="toggleAuth()">GİRİŞ / KAYIT</button>
+            <button class="btn-main" onclick="toggleAuth()">GİRİŞ YAP / KAYIT OL</button>
         </div>
     </nav>
 
+    <header class="hero">
+        <h1>COMMAND CENTER</h1>
+        <p style="color: var(--primary); letter-spacing: 5px; font-weight: bold; font-family: 'Orbitron'; font-size: 12px;">SİSTEM AKTİF</p>
+    </header>
+
     <div class="container">
-        <h2 style="font-family: 'Orbitron'; margin-bottom: 30px; border-left: 4px solid var(--primary); padding-left: 15px;">CANLI HABER AKIŞI</h2>
-        <div class="news-grid" id="newsGrid">
-            </div>
+        <div class="live-header">
+            <div class="live-indicator"></div>
+            <h2 style="color: #fff;">CANLI AKIŞ & ETKİNLİKLER</h2>
+        </div>
+
+        <div class="feed-card event">
+            <span class="feed-time">🔴 YAKLAŞAN ETKİNLİK | 15 Nisan 2026 - 21:00</span>
+            <h3 class="feed-title">Büyük Forest TR Toplanması</h3>
+            <p style="color: #aaa;">Discord sunucumuzda 100+ kişiyle adaya iniyoruz. Etkinlik odalarında yerini ayırtmayı unutma. Ekipmanını hazırla!</p>
+        </div>
+
+        <div class="feed-card">
+            <span class="feed-time">⚡ SİSTEM BİLGİSİ | ŞU AN</span>
+            <h3 class="feed-title">Sunucu Kapasitesi Artırıldı</h3>
+            <p style="color: #aaa;">insanazor tarafından yapılan son güncellemeyle veritabanı kapasitesi genişletildi. Artık yorumlar daha hızlı yükleniyor.</p>
+        </div>
+
+        <div class="feed-card">
+            <span class="feed-time">📍 REHBER AKIŞI | SOTF v1.0</span>
+            <h3 class="feed-title">Yeni Mutant Lokasyonları</h3>
+            <p style="color: #aaa;">Haritanın batı yakasındaki yeni mağara sisteminde elit mutantlar tespit edildi. Bölgeye tek başınıza girmeyin.</p>
+        </div>
     </div>
 
     <div class="community-section">
-        <h3 style="font-family: 'Orbitron'; margin-bottom: 20px;">TOPLULUK SESİ</h3>
-        <div id="commentList">
-            </div>
-        <div style="margin-top: 20px; display: flex; gap: 10px;">
-            <input type="text" id="commentInput" placeholder="Mesajını yaz..." style="margin-bottom: 0;">
+        <h3 style="font-family: 'Orbitron'; margin-bottom: 20px; border-bottom: 1px solid var(--border); padding-bottom: 10px;">TOPLULUK YORUMLARI</h3>
+        <div id="commentList" style="max-height: 400px; overflow-y: auto; margin-bottom: 20px;">
+            <p style="opacity: 0.5;">Sisteme bağlanılıyor...</p>
+        </div>
+        <div style="display: flex; gap: 10px;">
+            <input type="text" id="commentInput" placeholder="Buraya yazın..." style="margin-bottom: 0;">
             <button class="btn-main" onclick="sendComment()">GÖNDER</button>
         </div>
     </div>
 
+    <footer>
+        <div class="social-links">
+            <a href="https://instagram.com/senin_hesabin" target="_blank" class="social-btn insta">INSTAGRAM</a>
+            <a href="https://discord.gg/senin_sunucun" target="_blank" class="social-btn discord">DISCORD</a>
+            <a href="https://youtube.com/c/senin_kanalin" target="_blank" class="social-btn youtube">YOUTUBE</a>
+        </div>
+        <p style="color: #555; font-size: 12px; font-family: 'Orbitron';">© 2026 FOREST TR HUB | CREATED BY İNSANAZOR & KILLOKI</p>
+    </footer>
+
     <div class="modal" id="authModal">
         <div class="auth-form">
-            <h2 id="authTitle" style="color: var(--primary); margin-bottom: 20px;">GİRİŞ YAP</h2>
-            <input type="email" id="email" placeholder="E-posta">
+            <h2 style="color: var(--primary); font-family: 'Orbitron'; margin-bottom: 20px;">VERİTABANI ERİŞİMİ</h2>
+            <input type="email" id="email" placeholder="E-Posta Adresi">
             <input type="password" id="password" placeholder="Şifre">
-            <button class="btn-main" style="width: 100%;" onclick="handleAuth()">DEVAM ET</button>
-            <p onclick="toggleAuth()" style="margin-top: 15px; font-size: 12px; cursor: pointer; opacity: 0.5;">Kapat</p>
+            <button class="btn-main" style="width: 100%; padding: 15px; font-size: 14px;" onclick="handleAuth()">GİRİŞ YAP</button>
+            <p style="margin-top: 20px; font-size: 11px; opacity: 0.5; cursor: pointer; transition: 0.3s;" onmouseover="this.style.color='var(--primary)'" onmouseout="this.style.color='#fff'" onclick="toggleAuth()">Pencereyi Kapat</p>
         </div>
     </div>
 
     <script>
-        // --- SUPABASE BAĞLANTISI ---
-        // Senin URL'ni buraya eklemen gerekecek, Key'i ben ekledim.
-        const SUPABASE_URL = 'nofdrpeqkrduasuzhgpe'; 
+        // --- SUPABASE BAĞLANTISI (Aynı Şekilde Korundu) ---
+        const SUPABASE_URL = 'https://nofdrpeqkrduasuzhgpe.supabase.co';
         const SUPABASE_KEY = 'sb_publishable_caKncH3gByT_fcUybZV9TQ_J07SkQ-S';
-        const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-        let user = null;
+        let currentUser = null;
 
-        // 1. OTURUM KONTROLÜ
         async function checkUser() {
-            const { data } = await supabase.auth.getUser();
-            if (data.user) {
-                user = data.user;
+            const { data: { user } } = await _supabase.auth.getUser();
+            if (user) {
+                currentUser = user;
                 document.getElementById('userSection').innerHTML = `
-                    <span style="color: var(--primary); font-weight: bold; margin-right: 15px;">${user.email.split('@')[0]}</span>
-                    <button class="btn-main" style="background: #222; color: #fff;" onclick="logout()">ÇIKIŞ</button>
+                    <span style="color:var(--primary); font-weight:bold; margin-right:15px; font-family: 'Orbitron'; letter-spacing: 1px;">@${user.email.split('@')[0]}</span>
+                    <button class="btn-main" style="background:#222; color:#fff;" onclick="logout()">ÇIKIŞ</button>
                 `;
             }
         }
 
-        // 2. KAYIT / GİRİŞ SİSTEMİ
         async function handleAuth() {
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
-            
-            // Hem giriş hem kayıt denemesi (Basitlik için)
-            const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-            
+            const { data, error } = await _supabase.auth.signInWithPassword({ email, password });
+
             if (error) {
-                const { data: signUpData, error: signUpError } = await supabase.auth.signUp({ email, password });
+                const { error: signUpError } = await _supabase.auth.signUp({ email, password });
                 if (signUpError) alert("Hata: " + signUpError.message);
-                else alert("Kayıt başarılı! E-postanı onayla.");
+                else alert("Sisteme kayıt olundu! Giriş yapmak için tekrar deneyin veya e-postanızı onaylayın.");
             } else {
                 location.reload();
             }
         }
 
-        // 3. CANLI YORUMLARI ÇEKME
-        async function fetchComments() {
-            const { data, error } = await supabase
-                .from('comments')
-                .select('*')
-                .order('created_at', { ascending: false });
-            
-            if (data) {
-                const list = document.getElementById('commentList');
-                list.innerHTML = data.map(c => `
-                    <div class="comment">
-                        <strong>${c.username}</strong>
-                        <p>${c.content}</p>
-                    </div>
-                `).join('');
-            }
-        }
-
-        // 4. YORUM GÖNDERME
         async function sendComment() {
-            if (!user) return alert("Önce giriş yapmalısın!");
+            if (!currentUser) return alert("Sisteme veri göndermek için giriş yapmalısın.");
             const content = document.getElementById('commentInput').value;
             if (!content) return;
 
-            const { error } = await supabase
-                .from('comments')
-                .insert([{ 
-                    content: content, 
-                    username: user.email.split('@')[0],
-                    user_id: user.id 
-                }]);
+            const { error } = await _supabase.from('comments').insert([{ 
+                content: content, username: currentUser.email.split('@')[0], user_id: currentUser.id 
+            }]);
 
-            if (!error) {
-                document.getElementById('commentInput').value = "";
-                fetchComments();
+            if (error) console.error(error);
+            else { document.getElementById('commentInput').value = ""; fetchComments(); }
+        }
+
+        async function fetchComments() {
+            const { data, error } = await _supabase.from('comments').select('*').order('created_at', { ascending: false });
+            if (data) {
+                const list = document.getElementById('commentList');
+                list.innerHTML = data.length > 0 ? 
+                    data.map(c => `<div class="comment-item"><strong>${c.username}</strong><p style="color:#ddd;">${c.content}</p></div>`).join('') :
+                    '<p style="opacity:0.5">Sistemde kayıtlı veri bulunamadı.</p>';
             }
         }
 
-        async function logout() {
-            await supabase.auth.signOut();
-            location.reload();
-        }
-
+        async function logout() { await _supabase.auth.signOut(); location.reload(); }
         function toggleAuth() { document.getElementById('authModal').classList.toggle('active'); }
 
-        // Başlangıç
-        checkUser();
-        fetchComments();
-        // Haberler kısmını da benzer bir fetchNews fonksiyonu ile doldurabiliriz.
+        checkUser(); fetchComments();
     </script>
 </body>
 </html>
