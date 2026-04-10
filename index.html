@@ -228,6 +228,46 @@
         function toggleAuth() { document.getElementById('authModal').classList.toggle('active'); }
 
         checkUser(); fetchComments();
-    </script>
+    </script><script>
+    // ... eski supabase bağlantı kodların burada duruyor olmalı ...
+
+    // MODALI AÇAN FONKSİYON
+    function changeUsername() {
+        const modal = document.getElementById('nameModal');
+        if(modal) {
+            modal.classList.add('active');
+        } else {
+            console.error("nameModal bulunamadı!");
+        }
+    }
+
+    // İSMİ GÜNCELLEYEN FONKSİYON
+    async function updateName() {
+        const newName = document.getElementById('newUsername').value;
+        if (!newName) return alert("Bir isim yazmalısın!");
+
+        // Supabase tarafında kullanıcının ismini (metadata) günceller
+        const { data, error } = await _supabase.auth.updateUser({
+            data: { display_name: newName }
+        });
+
+        if (error) {
+            alert("Hata: " + error.message);
+        } else {
+            alert("Kod adın güncellendi: " + newName);
+            location.reload(); // Değişikliği görmek için sayfayı tazele
+        }
+    }
+</script>
 </body>
 </html>
+<button class="btn-main" style="background:#444; margin-right:5px;" onclick="changeUsername()">ADINI DEĞİŞTİR</button>
+
+<div class="modal" id="nameModal">
+    <div class="auth-form">
+        <h3 style="color:var(--primary); margin-bottom:15px;">YENİ KOD ADIN</h3>
+        <input type="text" id="newUsername" placeholder="Yeni kullanıcı adı...">
+        <button class="btn-main" style="width:100%" onclick="updateName()">GÜNCELLE</button>
+        <p onclick="document.getElementById('nameModal').classList.remove('active')" style="cursor:pointer; margin-top:10px; font-size:12px;">Vazgeç</p>
+    </div>
+</div>
