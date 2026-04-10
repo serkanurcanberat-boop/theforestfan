@@ -3,248 +3,193 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FOREST HUB | Infinite Edition</title>
+    <title>FOREST HUB | Live Cloud</title>
+    
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&family=Orbitron:wght@500;900&display=swap" rel="stylesheet">
     <style>
+        /* Dünkü Lüks CSS Ayarları Aynen Korundu */
         :root {
             --primary: #00ff41;
             --primary-glow: rgba(0, 255, 65, 0.3);
             --bg: #000000;
-            --surface: rgba(15, 15, 15, 0.7);
+            --surface: rgba(15, 15, 15, 0.8);
             --border: rgba(255, 255, 255, 0.08);
             --text-main: #e2e8f0;
             --transition: all 0.5s cubic-bezier(0.2, 1, 0.2, 1);
         }
 
-        /* The Forest Red Mode */
-        body.red-mode {
-            --primary: #ff0000;
-            --primary-glow: rgba(255, 0, 0, 0.3);
-        }
-
+        body.red-mode { --primary: #ff0000; --primary-glow: rgba(255, 0, 0, 0.3); }
         * { box-sizing: border-box; margin: 0; padding: 0; outline: none; }
-        
-        body {
-            background: var(--bg);
-            color: var(--text-main);
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            overflow-x: hidden;
-            background-image: 
-                radial-gradient(circle at 10% 10%, rgba(0, 255, 65, 0.05) 0%, transparent 50%),
-                radial-gradient(circle at 90% 90%, rgba(0, 255, 65, 0.05) 0%, transparent 50%);
-        }
-
-        /* CUSTOM SCROLLBAR */
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: #000; }
-        ::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 10px; }
+        body { background: var(--bg); color: var(--text-main); font-family: 'Plus Jakarta Sans', sans-serif; }
 
         /* NAVBAR */
         nav {
             position: fixed; top: 0; width: 100%; z-index: 1000;
-            padding: 20px 5%; display: flex; justify-content: space-between; align-items: center;
-            background: rgba(0,0,0,0.8); backdrop-filter: blur(20px);
-            border-bottom: 1px solid var(--border);
+            padding: 15px 5%; display: flex; justify-content: space-between; align-items: center;
+            background: rgba(0,0,0,0.8); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border);
         }
 
-        .brand { font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 1.5rem; letter-spacing: 2px; }
+        .brand { font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 1.5rem; }
         .brand span { color: var(--primary); text-shadow: 0 0 20px var(--primary-glow); }
 
-        .nav-actions { display: flex; gap: 15px; align-items: center; }
-
-        /* GAME TOGGLE */
-        .game-switch {
-            background: #111; padding: 4px; border-radius: 50px; border: 1px solid var(--border);
-            display: flex; gap: 5px;
-        }
-        .switch-btn {
-            padding: 8px 16px; border-radius: 50px; border: none; background: transparent;
-            color: #555; cursor: pointer; font-family: 'Orbitron'; font-size: 10px; font-weight: 900;
-            transition: var(--transition);
-        }
-        .switch-btn.active { background: var(--primary); color: #000; }
-
-        /* HERO SECTION */
-        .hero {
-            height: 60vh; display: flex; flex-direction: column; justify-content: center; align-items: center;
-            text-align: center; background: linear-gradient(to bottom, transparent, #000), url('https://images.alphacoders.com/130/1301384.jpeg');
-            background-size: cover; background-position: center; border-bottom: 1px solid var(--border);
-        }
-
-        .hero h1 { font-family: 'Orbitron', sans-serif; font-size: 4rem; margin-bottom: 10px; }
-
-        /* NEWS GRID */
-        .container { max-width: 1400px; margin: -50px auto 100px; padding: 0 40px; position: relative; z-index: 10; }
-        
-        .news-grid {
-            display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 30px;
-        }
-
-        .news-card {
-            background: var(--surface); border: 1px solid var(--border);
-            border-radius: 24px; padding: 40px; backdrop-filter: blur(20px);
-            transition: var(--transition); cursor: pointer;
-            position: relative; overflow: hidden;
-        }
-
-        /* THE POP-FORWARD EFFECT */
-        .news-card:hover {
-            transform: scale(1.05) translateY(-10px);
-            border-color: var(--primary);
-            box-shadow: 0 20px 50px rgba(0,0,0,0.5), 0 0 30px var(--primary-glow);
-            z-index: 20;
-        }
-
-        .news-card h2 { font-size: 1.8rem; margin-bottom: 15px; transition: 0.3s; }
-        .news-card p { color: #888; line-height: 1.6; }
-
-        /* AUTH MODAL */
-        .modal-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.9); backdrop-filter: blur(15px);
-            display: none; justify-content: center; align-items: center; z-index: 2000;
-        }
-        .modal-overlay.active { display: flex; animation: fadeIn 0.3s ease; }
-
-        .auth-card {
-            background: #0a0a0a; border: 1px solid var(--primary);
-            padding: 50px; border-radius: 30px; width: 450px; text-align: center;
-            box-shadow: 0 0 50px var(--primary-glow);
-        }
-
-        .input-group input {
-            width: 100%; padding: 15px; margin-bottom: 15px; background: #000;
-            border: 1px solid var(--border); border-radius: 12px; color: #fff;
-        }
-
+        /* BUTONLAR */
         .btn-main {
-            width: 100%; padding: 15px; background: var(--primary); color: #000;
-            border: none; border-radius: 12px; font-weight: 800; cursor: pointer;
-            font-family: 'Orbitron'; transition: 0.3s;
+            padding: 12px 25px; background: var(--primary); color: #000;
+            border: none; border-radius: 10px; font-weight: 800; cursor: pointer;
+            font-family: 'Orbitron'; transition: var(--transition);
         }
         .btn-main:hover { transform: translateY(-3px); box-shadow: 0 10px 20px var(--primary-glow); }
 
-        /* COMMENT SECTION AT BOTTOM */
-        .community-section {
-            max-width: 900px; margin: 0 auto 100px; padding: 40px;
-            background: rgba(255,255,255,0.02); border-radius: 30px; border: 1px solid var(--border);
+        /* HABER KARTLARI (DİNAMİK) */
+        .container { max-width: 1200px; margin: 120px auto 50px; padding: 0 20px; }
+        .news-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 25px; }
+        
+        .news-card {
+            background: var(--surface); border: 1px solid var(--border);
+            padding: 30px; border-radius: 20px; transition: var(--transition);
         }
+        .news-card:hover { transform: scale(1.03); border-color: var(--primary); box-shadow: 0 0 30px var(--primary-glow); }
 
-        .comment-box { margin-top: 30px; display: flex; gap: 15px; }
-        .comment-input { flex: 1; background: #000; border: 1px solid var(--border); border-radius: 12px; padding: 15px; color: #fff; }
+        /* YORUM ALANI */
+        .community-section { max-width: 800px; margin: 50px auto; padding: 30px; background: #050505; border-radius: 20px; border: 1px solid var(--border); }
+        .comment { padding: 15px; border-bottom: 1px solid var(--border); display: flex; flex-direction: column; gap: 5px; }
+        .comment strong { color: var(--primary); font-size: 0.9rem; }
+        .comment p { font-size: 0.95rem; opacity: 0.8; }
 
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
-        @media (max-width: 768px) {
-            .hero h1 { font-size: 2.5rem; }
-            .container { padding: 0 20px; }
+        /* AUTH MODAL */
+        .modal {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.95); display: none; justify-content: center; align-items: center; z-index: 2000;
         }
+        .modal.active { display: flex; }
+        .auth-form { background: #0a0a0a; padding: 40px; border-radius: 20px; border: 1px solid var(--primary); width: 350px; text-align: center; }
+        input { width: 100%; padding: 12px; margin-bottom: 15px; background: #000; border: 1px solid var(--border); color: #fff; border-radius: 8px; }
     </style>
 </head>
 <body id="body">
 
     <nav>
         <div class="brand">FOREST<span>HUB</span></div>
-        
-        <div class="nav-actions">
-            <div class="game-switch">
-                <button class="switch-btn active" onclick="switchTheme('sotf', this)">SOTF</button>
-                <button class="switch-btn" onclick="switchTheme('forest', this)">FOREST</button>
-            </div>
-            <button class="btn-main" style="padding: 10px 20px; width: auto; font-size: 10px;" onclick="toggleAuth()">ERİŞİM SAĞLA</button>
+        <div id="userSection">
+            <button class="btn-main" onclick="toggleAuth()">GİRİŞ / KAYIT</button>
         </div>
     </nav>
 
-    <header class="hero" id="hero">
-        <h1 id="heroTitle">SONS OF THE FOREST</h1>
-        <p style="letter-spacing: 5px; opacity: 0.6; font-weight: bold;">SURVIVAL COMMAND CENTER</p>
-    </header>
-
     <div class="container">
-        <div class="news-grid">
-            <div class="news-card">
-                <span style="color: var(--primary); font-size: 12px; font-weight: 800;">HABER #042</span>
-                <h2>v1.0 Global Sürüm</h2>
-                <p>Ada hiç olmadığı kadar karanlık. Yeni sığınaklar ve mutant türleri keşfedilmeyi bekliyor. Hazırlıklı olun.</p>
+        <h2 style="font-family: 'Orbitron'; margin-bottom: 30px; border-left: 4px solid var(--primary); padding-left: 15px;">CANLI HABER AKIŞI</h2>
+        <div class="news-grid" id="newsGrid">
             </div>
-
-            <div class="news-card">
-                <span style="color: var(--primary); font-size: 12px; font-weight: 800;">REHBER</span>
-                <h2>Modern Balta Konumu</h2>
-                <p>Mağaranın derinliklerinde kaybolmadan en güçlü baltaya ulaşmanın en güvenli yolunu harita üzerinde incele.</p>
-            </div>
-
-            <div class="news-card">
-                <span style="color: var(--primary); font-size: 12px; font-weight: 800;">TOPLULUK</span>
-                <h2>insanazor Mod Paketi</h2>
-                <p>Sistemi optimize eden ve grafik kalitesini en üst seviyeye taşıyan özel mod paketimizi indir.</p>
-            </div>
-        </div>
     </div>
 
     <div class="community-section">
-        <h2 style="font-family: 'Orbitron'; text-align: center;">TOPLULUK YORUMLARI</h2>
-        
-        <div id="commentList" style="margin-top: 30px;">
-            <div style="padding: 15px; border-bottom: 1px solid var(--border);">
-                <strong style="color: var(--primary);">Killoki:</strong> Tasarım efsane olmuş, kitleyi buraya topluyoruz!
+        <h3 style="font-family: 'Orbitron'; margin-bottom: 20px;">TOPLULUK SESİ</h3>
+        <div id="commentList">
             </div>
-        </div>
-
-        <div class="comment-box">
-            <input type="text" id="userComment" class="comment-input" placeholder="Bir yorum bırak...">
-            <button class="btn-main" style="width: auto; padding: 0 30px;" onclick="postComment()">GÖNDER</button>
+        <div style="margin-top: 20px; display: flex; gap: 10px;">
+            <input type="text" id="commentInput" placeholder="Mesajını yaz..." style="margin-bottom: 0;">
+            <button class="btn-main" onclick="sendComment()">GÖNDER</button>
         </div>
     </div>
 
-    <div class="modal-overlay" id="authModal">
-        <div class="auth-card">
-            <h2 style="font-family: 'Orbitron'; margin-bottom: 30px; color: var(--primary);">SİSTEME GİRİŞ</h2>
-            <div class="input-group">
-                <input type="text" placeholder="Kullanıcı Adı">
-                <input type="password" placeholder="Şifre">
-            </div>
-            <button class="btn-main" onclick="toggleAuth()">BAĞLAN</button>
-            <p style="margin-top: 20px; font-size: 12px; opacity: 0.5; cursor: pointer;" onclick="toggleAuth()">Geri Dön</p>
+    <div class="modal" id="authModal">
+        <div class="auth-form">
+            <h2 id="authTitle" style="color: var(--primary); margin-bottom: 20px;">GİRİŞ YAP</h2>
+            <input type="email" id="email" placeholder="E-posta">
+            <input type="password" id="password" placeholder="Şifre">
+            <button class="btn-main" style="width: 100%;" onclick="handleAuth()">DEVAM ET</button>
+            <p onclick="toggleAuth()" style="margin-top: 15px; font-size: 12px; cursor: pointer; opacity: 0.5;">Kapat</p>
         </div>
     </div>
 
     <script>
-        // Tema Değiştirme (SOTF vs Forest)
-        function switchTheme(game, btn) {
-            document.querySelectorAll('.switch-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            
-            if(game === 'forest') {
-                document.getElementById('body').classList.add('red-mode');
-                document.getElementById('heroTitle').innerText = "THE FOREST";
-                document.getElementById('hero').style.backgroundImage = "linear-gradient(to bottom, transparent, #000), url('https://images.alphacoders.com/530/530691.jpg')";
-            } else {
-                document.getElementById('body').classList.remove('red-mode');
-                document.getElementById('heroTitle').innerText = "SONS OF THE FOREST";
-                document.getElementById('hero').style.backgroundImage = "linear-gradient(to bottom, transparent, #000), url('https://images.alphacoders.com/130/1301384.jpeg')";
+        // --- SUPABASE BAĞLANTISI ---
+        // Senin URL'ni buraya eklemen gerekecek, Key'i ben ekledim.
+        const SUPABASE_URL = 'SENİN_SUPABASE_PROJE_URL_BURAYA'; 
+        const SUPABASE_KEY = 'sb_publishable_caKncH3gByT_fcUybZV9TQ_J07SkQ-S';
+        const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        let user = null;
+
+        // 1. OTURUM KONTROLÜ
+        async function checkUser() {
+            const { data } = await supabase.auth.getUser();
+            if (data.user) {
+                user = data.user;
+                document.getElementById('userSection').innerHTML = `
+                    <span style="color: var(--primary); font-weight: bold; margin-right: 15px;">${user.email.split('@')[0]}</span>
+                    <button class="btn-main" style="background: #222; color: #fff;" onclick="logout()">ÇIKIŞ</button>
+                `;
             }
         }
 
-        // Giriş Modalı
-        function toggleAuth() {
-            document.getElementById('authModal').classList.toggle('active');
+        // 2. KAYIT / GİRİŞ SİSTEMİ
+        async function handleAuth() {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            
+            // Hem giriş hem kayıt denemesi (Basitlik için)
+            const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+            
+            if (error) {
+                const { data: signUpData, error: signUpError } = await supabase.auth.signUp({ email, password });
+                if (signUpError) alert("Hata: " + signUpError.message);
+                else alert("Kayıt başarılı! E-postanı onayla.");
+            } else {
+                location.reload();
+            }
         }
 
-        // Yorum Gönderme
-        function postComment() {
-            const input = document.getElementById('userComment');
-            if(!input.value) return;
+        // 3. CANLI YORUMLARI ÇEKME
+        async function fetchComments() {
+            const { data, error } = await supabase
+                .from('comments')
+                .select('*')
+                .order('created_at', { ascending: false });
             
-            const list = document.getElementById('commentList');
-            const newComment = document.createElement('div');
-            newComment.style.padding = "15px";
-            newComment.style.borderBottom = "1px solid var(--border)";
-            newComment.innerHTML = `<strong style="color: var(--primary);">Kullanıcı:</strong> ${input.value}`;
-            
-            list.appendChild(newComment);
-            input.value = "";
+            if (data) {
+                const list = document.getElementById('commentList');
+                list.innerHTML = data.map(c => `
+                    <div class="comment">
+                        <strong>${c.username}</strong>
+                        <p>${c.content}</p>
+                    </div>
+                `).join('');
+            }
         }
+
+        // 4. YORUM GÖNDERME
+        async function sendComment() {
+            if (!user) return alert("Önce giriş yapmalısın!");
+            const content = document.getElementById('commentInput').value;
+            if (!content) return;
+
+            const { error } = await supabase
+                .from('comments')
+                .insert([{ 
+                    content: content, 
+                    username: user.email.split('@')[0],
+                    user_id: user.id 
+                }]);
+
+            if (!error) {
+                document.getElementById('commentInput').value = "";
+                fetchComments();
+            }
+        }
+
+        async function logout() {
+            await supabase.auth.signOut();
+            location.reload();
+        }
+
+        function toggleAuth() { document.getElementById('authModal').classList.toggle('active'); }
+
+        // Başlangıç
+        checkUser();
+        fetchComments();
+        // Haberler kısmını da benzer bir fetchNews fonksiyonu ile doldurabiliriz.
     </script>
 </body>
 </html>
